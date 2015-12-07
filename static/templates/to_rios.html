@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>To RIOS</title>
+  </head>
+  <body>
+    <h2>Convert to RIOS</h2>
+    <FORM action="{{PATH_URL}}/rios" method="post" enctype="multipart/form-data">
+      <P>
+      <LABEL for="system">Convert From: </LABEL>
+          <INPUT type="radio" name="system" value="qualtrics"> Qualtrics
+          <INPUT type="radio" checked name="system" value="redcap"> REDCap<BR>
+      <LABEL for="infile"> Input file to convert: </LABEL>
+          <INPUT type="file" name="infile"><BR>
+      </P>
+      <P>
+      RIOS forms are multi-lingual. 
+      Which language is used in the input?<br>
+      <LABEL for="localization">Language code (default is <b>en</b>): </LABEL>
+          <INPUT type="text" name="localization"><BR>
+      </P>
+      <P>
+      <LABEL for="outname">Output filename prefix: </LABEL>
+          <INPUT type="text" name="outname"><BR>
+      <LABEL for="format">Output format: </LABEL>
+          <INPUT type="radio" name="format" value="json"> JSON
+          <INPUT type="radio" checked name="format" value="yaml"> YAML<BR>
+      </P>
+      <P>
+      <LABEL for="instrument_title">Output Instrument title: </LABEL>
+          <INPUT type="text" name="instrument_title"><BR>
+      <LABEL for="instrument_id">Output Instrument ID: </LABEL>
+          <INPUT type="text" name="instrument_id"><BR>
+      <LABEL for="instrument_version">
+          Output Instrument version: </LABEL>
+          <INPUT type="text" name="instrument_version"><BR>
+      </P>
+      <P>
+      <INPUT type="submit" value="Send"> <INPUT type="reset">
+      </P>
+    </FORM>
+  </body>
+</html>

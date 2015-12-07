@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>From RIOS</title>
+  </head>
+  <body>
+    <h2>Convert from RIOS</h2>
+    <FORM action="{{PATH_URL}}/rios" method="post" enctype="multipart/form-data">
+      <P>
+      <LABEL for="system">Convert To: </LABEL>
+          <INPUT type="radio" name="system" value="qualtrics"> Qualtrics
+          <INPUT type="radio" checked name="system" value="redcap"> REDCap<BR>
+      </P>
+      <P>
+      <LABEL for="instrument_file">Input Instrument: </LABEL>
+          <INPUT type="file" name="instrument_file"><BR>
+      <LABEL for="form_file">Input Form: </LABEL>
+          <INPUT type="file" name="form_file"><BR>
+      <LABEL for="calculationset_file">Input CalculationSet (optional): </LABEL>
+          <INPUT type="file" name="calculationset_file"><BR>
+      </P>
+      <P>
+      <LABEL for="outname">Output filename prefix: </LABEL>
+          <INPUT type="text" name="outname"><BR>
+      </P>
+      <P>
+      RIOS forms are multi-lingual. 
+      Which language to you want to extract?<br>
+      <LABEL for="localization">Language code (default is <b>en</b>): </LABEL>
+          <INPUT type="text" name="localization"><BR>
+      </P>
+      <P>
+      <INPUT type="submit" value="Send"> <INPUT type="reset">
+      </P>
+    </FORM>
+  </body>
+</html>
