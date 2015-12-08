@@ -1,5 +1,5 @@
 Welcome to the RIOS Instrument Converter API
-============================================
+--------------------------------------------
 
 Links to conversion forms
 -------------------------
@@ -23,49 +23,40 @@ to:
 parameters:
 
   **system=**\ (**qualtrics**)|(**readcap**)
-    required
-
+    Required.
     The system to convert from.
 
   **infile=**
-    required
-    
+    Required.
     The input file to convert.
     
   **localization=**
-    default is **en**
-
-    RIOS is multi-lingual.  
+    Default is **en**.
+    RIOS is multi-lingual.
     You must provide the language code the input file is written in.
     
   **outname=**
-    required
-
+    Required.
     Use this parameter to name the output files.
 
-  **format=**\ (**json**)|(**yaml**)     
-    default is **yaml**
-
+  **format=**\ (**json**)|(**yaml**)
+    Default is **yaml**.
     Select the format for the output files.
     
   **instrument_title=**
-    required
-
+    Required.
     You must provide the instrument title.
     
   **instrument_id=**
-    required
-
+    Required.
     You must provide the instrument ID.  
     This must consist only of lowercase letters, digits, or underscore, 
     and must begin with a letter.
     
   **instrument_version=**
-    default is **1.0**
-
+    Required.
     The instrument version.
     This must consist of two numbers separated by a period.
-      
     A RIOS instrument is uniquely identified 
     by (instrument_id, instrument_version)
 
@@ -82,33 +73,27 @@ to:
 parameters:
 
   **system=**\ (**qualtrics**)|(**readcap**)
-    required
-
+    Required.
     The system to convert to.
 
   **instrument_file=**
-    required
-
+    Required.
     The input instrument to convert.
 
   **form_file=**
-    required
-
+    Required.
     The input form to convert.
 
   **calculationset_file=**
-    optional
-
+    Optional.
     The input calculation set to convert.
 
   **outname=**
-    required
-
+    Required.
     Use this parameter to name the output files.
 
   **localization=**
-    default is **en**
-
+    Default is **en**.
     RIOS is multi-lingual.  
     You must select which language to extract.
 
@@ -117,9 +102,8 @@ Response
 
 The response will be a zip file to download, 
 or in the case of an error,
-a JSON object with attributes **status** (the html status code), 
+a JSON object which includes the attributes **status** (the html status code), 
 and **errors** (a list of error message strings).
-
 The zip file will contain the converted instrument file(s) 
 and may contain a file whose name ends in **.warnings.txt**, 
 which contains any warning messages emitted by the converter.
