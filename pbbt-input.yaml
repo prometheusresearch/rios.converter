@@ -1,0 +1,17 @@
+#
+# Copyright (c) 2015, Prometheus Research, LLC
+#
+
+title: RIOS.CONVERTER
+tests:
+  # check Python source syntax and style
+  - sh: flake8 ./src/
+  
+  - sh: pip install --quiet coverage nose
+    ignore: true
+
+  - rmdir: ./tests/sandbox
+  - mkdir: ./tests/sandbox
+
+  - sh: nosetests --quiet
+    ignore: true

@@ -4,7 +4,6 @@ from rex.core import get_packages
 from rex.core import get_settings
 from rex.core import AnyVal
 from rex.core import StrVal
-from rex.core import PIntVal
 from rex.core import Setting
 from rex.web import Command
 from rex.web import HandleError
@@ -72,8 +71,9 @@ class ConvertToRios(Command):
         'redcap': RedcapToRios,
         }
 
-            
-    def render(self, req,
+    def render(
+            self,
+            req,
             system,
             format,
             instrument_title,
@@ -102,7 +102,7 @@ class ConvertToRios(Command):
             if not instrument_id:
                 errors.append('Instrument ID is required.')
             if not instrument_title:
-                errors.append('Instrument Title is required.') 
+                errors.append('Instrument Title is required.')
             args.extend([
                 '--id', instrument_id,
                 '--title', instrument_title, ])
@@ -119,7 +119,7 @@ class ConvertToRios(Command):
             return Response(json={
                     "status": 400,
                     "errors": errors
-                    })        
+                    })
         with open(error_filename, 'wb') as stderr:
             sys.stdin = infile.file
             # I can't explain why I am
@@ -150,7 +150,7 @@ class ConvertToRios(Command):
             name = outname + '.zip'
             shutil.rmtree(temp_dir)
             return Response(
-                    content_type='application/zip', 
+                    content_type='application/zip',
                     content_disposition='attachment; filename="%s"' % name,
                     body=body)
         else:
@@ -187,7 +187,9 @@ class ConvertFromRios(Command):
             fo.write(file_field.file.read())
         return filename
 
-    def render(self, req,
+    def render(
+            self,
+            req,
             system,
             format,
             localization,
@@ -195,7 +197,7 @@ class ConvertFromRios(Command):
             form_file,
             calculationset_file,
             outname):
-    
+
         self.settings = get_settings()
         tempfile.tempdir = self.settings.temp_dir
         self.temp_dir = tempfile.mkdtemp()
@@ -208,23 +210,23 @@ class ConvertFromRios(Command):
         args = [
                 '--verbose',
                 '--format', format,
-                '--outfile', outfile, 
+                '--outfile', outfile,
                 ]
         if hasattr(instrument_file, 'filename'):
             args.extend([
-                    '--instrument', 
-                    '%s' % self.load_file(instrument_file)])                
+                    '--instrument',
+                    '%s' % self.load_file(instrument_file)])
         else:
             errors.append('An input instrument file is required.')
         if hasattr(form_file, 'filename'):
             args.extend([
-                    '--form', 
+                    '--form',
                     '%s' % self.load_file(form_file)])
         else:
             errors.append('An input form file is required.')
         if hasattr(calculationset_file, 'filename'):
             args.extend([
-                    '--calculationset', 
+                    '--calculationset',
                     '%s' % self.load_file(calculationset_file)])
         if localization:
             args.extend(['--localization', localization])
@@ -233,7 +235,7 @@ class ConvertFromRios(Command):
             return Response(json={
                     "status": 400,
                     "errors": errors
-                    })        
+                    })
         error_filename = outfile + '.stderr'
         with open(error_filename, 'wb') as stderr:
             # I can't eplain why I am
@@ -261,7 +263,7 @@ class ConvertFromRios(Command):
             name = outname + '.zip'
             shutil.rmtree(self.temp_dir)
             return Response(
-                    content_type='application/zip', 
+                    content_type='application/zip',
                     content_disposition='attachment; filename="%s"' % name,
                     body=body)
         else:
@@ -281,8 +283,8 @@ class HandleNotFound(HandleError):
 
     def __call__(self, req):
         return render_to_response(
-                self.template, 
-                req, 
+                self.template,
+                req,
                 status=self.code,
                 path=req.path)
 

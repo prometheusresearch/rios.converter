@@ -1,0 +1,1403 @@
+{
+    "SurveyElements": [
+        {
+            "Element": "BL",
+            "Payload": {
+                "1": {
+                    "BlockElements": [],
+                    "Description": "Trash / Unused Questions",
+                    "ID": "BL_ewINXLLgPGSMToU",
+                    "Type": "Trash"
+                },
+                "3": {
+                    "BlockElements": [
+                        {
+                            "QuestionID": "QID17671673",
+                            "Type": "Question"
+                        },
+                        {
+                            "Type": "Page Break"
+                        },
+                        {
+                            "QuestionID": "QID17671684",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671695",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671696",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671697",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671698",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671699",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671700",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671701",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671674",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671675",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671676",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671677",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671678",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671679",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671680",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671681",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671682",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671683",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671685",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671686",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671687",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671688",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671689",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671690",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671691",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671692",
+                            "Type": "Question"
+                        },
+                        {
+                            "QuestionID": "QID17671693",
+                            "Type": "Question"
+                        },
+                        {
+                            "Type": "Page Break"
+                        },
+                        {
+                            "QuestionID": "QID17671694",
+                            "Type": "Question"
+                        }
+                    ],
+                    "Description": "Default Question Block",
+                    "ID": "BL_egR0r71cln4IT53",
+                    "Type": "Standard"
+                }
+            },
+            "PrimaryAttribute": "Survey Blocks",
+            "SecondaryAttribute": null,
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "FL",
+            "Payload": {
+                "Flow": [
+                    {
+                        "FlowID": "FL_0H61Rc1wZydkW9f",
+                        "ID": "BL_egR0r71cln4IT53",
+                        "Type": "Standard"
+                    }
+                ],
+                "FlowID": "FL_beFskwZfIF2w2Mt",
+                "Properties": {
+                    "Count": 2,
+                    "count": 1
+                }
+            },
+            "PrimaryAttribute": "Survey Flow",
+            "SecondaryAttribute": null,
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SO",
+            "Payload": {
+                "BackButton": "true",
+                "BallotBoxStuffing": "false",
+                "CustomStyles": {
+                    "altRowStyles": {
+                        "selector": ".Skin .ReadableAlt, .Skin .LightBG",
+                        "styles": {
+                            "backgroundColor": null
+                        }
+                    }
+                }
+            },
+            "PrimaryAttribute": "Survey Options",
+            "SecondaryAttribute": null,
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SCO",
+            "Payload": {
+                "DefaultScoringCategory": null,
+                "ID": "Scoring"
+            },
+            "PrimaryAttribute": "Scoring",
+            "SecondaryAttribute": null,
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "AnalysisType": {
+                    "Type": "TableOnly"
+                },
+                "Choices": [
+                    {
+                        "Display": "Without test"
+                    },
+                    {
+                        "Display": "With some test"
+                    },
+                    {
+                        "Display": "or, are you completely unable to Q8?"
+                    }
+                ],
+                "Configuration": {
+                    "VariableCount": 3
+                },
+                "DataExportTag": "Q8",
+                "QuestionDescription": "(Q8)",
+                "QuestionID": "QID17671700",
+                "QuestionText": "Can you Q8:",
+                "QuestionType": "MC",
+                "Randomization": {
+                    "Type": "None"
+                },
+                "Selector": "SAVR",
+                "SubSelector": "TX",
+                "Validation": {
+                    "Settings": {
+                        "Type": "None"
+                    }
+                }
+            },
+            "PrimaryAttribute": "QID17671700",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "AnalysisType": {
+                    "Type": "TableOnly"
+                },
+                "Choices": [
+                    {
+                        "Display": "Without test"
+                    },
+                    {
+                        "Display": "With some test"
+                    },
+                    {
+                        "Display": "or, are you completely unable to Q11?"
+                    }
+                ],
+                "Configuration": {
+                    "VariableCount": 3
+                },
+                "DataExportTag": "Q11",
+                "QuestionDescription": "(11)  Can you 11:",
+                "QuestionID": "QID17671675",
+                "QuestionText": " (11)  Can you 11:",
+                "QuestionType": "MC",
+                "Randomization": {
+                    "Type": "None"
+                },
+                "Selector": "SAVR",
+                "SubSelector": "TX",
+                "Validation": {
+                    "Settings": {
+                        "Type": "None"
+                    }
+                }
+            },
+            "PrimaryAttribute": "QID17671675",
+            "SecondaryAttribute": "(11):",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "AnalysisType": {
+                    "Type": "TableOnly"
+                },
+                "Choices": [
+                    {
+                        "Display": "Without test"
+                    },
+                    {
+                        "Display": "With some test"
+                    },
+                    {
+                        "Display": "or, are you completely unable to Q10?"
+                    }
+                ],
+                "Configuration": {
+                    "VariableCount": 3
+                },
+                "DataExportTag": "Q10",
+                "QuestionDescription": "(your",
+                "QuestionID": "QID17671674",
+                "QuestionText": "Can you 10:",
+                "QuestionText_Unsafe": " (M:",
+                "QuestionType": "MC",
+                "Randomization": {
+                    "Type": "None"
+                },
+                "Selector": "SAVR",
+                "SubSelector": "TX",
+                "Validation": {
+                    "Settings": {
+                        "Type": "None"
+                    }
+                }
+            },
+            "PrimaryAttribute": "QID17671674",
+            "SecondaryAttribute": "(M",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "AnalysisType": {
+                    "Type": "TableOnly"
+                },
+                "Choices": [
+                    {
+                        "Display": "Without test"
+                    },
+                    {
+                        "Display": "With some test"
+                    },
+                    {
+                        "Display": "or, are you completely unable to Q12?"
+                    }
+                ],
+                "Configuration": {
+                    "VariableCount": 3
+                },
+                "DataExportTag": "Q12",
+                "QuestionDescription": "(12)",
+                "QuestionID": "QID17671676",
+                "QuestionText": " (12)  Can you 12:",
+                "QuestionText_Unsafe": "12:",
+                "QuestionType": "MC",
+                "Randomization": {
+                    "Type": "None"
+                },
+                "Selector": "SAVR",
+                "SubSelector": "TX",
+                "Validation": {
+                    "Settings": {
+                        "Type": "None"
+                    }
+                }
+            },
+            "PrimaryAttribute": "QID17671676",
+            "SecondaryAttribute": "12",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "AnalysisType": {
+                    "Type": "TableOnly"
+                },
+                "Choices": [
+                    {
+                        "Display": "Without test"
+                    },
+                    {
+                        "Display": "With some test"
+                    },
+                    {
+                        "Display": "or, are you completely unable to Q14?"
+                    }
+                ],
+                "Configuration": {
+                    "VariableCount": 3
+                },
+                "DataExportTag": "Q14",
+                "QuestionDescription": "(14)",
+                "QuestionID": "QID17671678",
+                "QuestionText": " (14)  Do you 14:",
+                "QuestionText_Unsafe": " (14:",
+                "QuestionType": "MC",
+                "Randomization": {
+                    "Type": "None"
+                },
+                "Selector": "SAVR",
+                "SubSelector": "TX",
+                "Validation": {
+                    "Settings": {
+                        "Type": "None"
+                    }
+                }
+            },
+            "PrimaryAttribute": "QID17671678",
+            "SecondaryAttribute": "14",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "AnalysisType": {
+                    "Type": "TableOnly"
+                },
+                "ChoiceOrder": [
+                    "1",
+                    "c2",
+                    "c3"
+                ],
+                "Choices": {
+                    "1": {
+                        "Display": "Without test"
+                    },
+                    "c2": {
+                        "Display": "With some test"
+                    },
+                    "c3": {
+                        "Display": "or, are you completely unable to Q13?"
+                    }
+                },
+                "Configuration": {
+                    "QuestionDescriptionOption": "UseText",
+                    "VariableCount": 3
+                },
+                "DataExportTag": "Q13",
+                "Language": [],
+                "QuestionDescription": "(13",
+                "QuestionID": "QID17671677",
+                "QuestionText": " (13) do you 13:",
+                "QuestionText_Unsafe": "13:",
+                "QuestionType": "MC",
+                "Randomization": {
+                    "Type": "None"
+                },
+                "Selector": "SAVR",
+                "SubSelector": "TX",
+                "Validation": {
+                    "Settings": {
+                        "Type": "None"
+                    }
+                }
+            },
+            "PrimaryAttribute": "QID17671677",
+            "SecondaryAttribute": "(13",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "AnalysisType": {
+                    "Type": "TableOnly"
+                },
+                "Choices": [
+                    {
+                        "Display": "Without test"
+                    },
+                    {
+                        "Display": "With some test"
+                    },
+                    {
+                        "Display": "or, are you completely unable to Q9?"
+                    }
+                ],
+                "Configuration": {
+                    "VariableCount": 3
+                },
+                "DataExportTag": "Q9",
+                "QuestionDescription": "(9",
+                "QuestionID": "QID17671701",
+                "QuestionText": " (9)  Can you 9:",
+                "QuestionText_Unsafe": " (9:",
+                "QuestionType": "MC",
+                "Randomization": {
+                    "Type": "None"
+                },
+                "Selector": "SAVR",
+                "SubSelector": "TX",
+                "Validation": {
+                    "Settings": {
+                        "Type": "None"
+                    }
+                }
+            },
+            "PrimaryAttribute": "QID17671701",
+            "SecondaryAttribute": "(9",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "AnalysisType": {
+                    "Type": "TextEntry"
+                },
+                "DataExportTag": "Q15",
+                "QuestionDescription": "(15",
+                "QuestionID": "QID17671679",
+                "QuestionText": "<br>(do 15?",
+                "QuestionText_Unsafe": "<br>(15",
+                "QuestionType": "TE",
+                "Randomization": {
+                    "Type": "None"
+                },
+                "Selector": "SL",
+                "SubSelector": null,
+                "Validation": {
+                    "Settings": {
+                        "Type": "None"
+                    }
+                }
+            },
+            "PrimaryAttribute": "QID17671679",
+            "SecondaryAttribute": "(15",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "AnalysisType": {
+                    "Type": "TableOnly"
+                },
+                "Choices": [
+                    {
+                        "Display": "Without test"
+                    },
+                    {
+                        "Display": "With some test"
+                    },
+                    {
+                        "Display": "or, are you completely unable to Q7?"
+                    }
+                ],
+                "Configuration": {
+                    "VariableCount": 3
+                },
+                "DataExportTag": "Q7",
+                "QuestionDescription": "(7",
+                "QuestionID": "QID17671699",
+                "QuestionText": "can you 7?",
+                "QuestionText_Unsafe": " (7:",
+                "QuestionType": "MC",
+                "Randomization": {
+                    "Type": "None"
+                },
+                "Selector": "SAVR",
+                "SubSelector": "TX",
+                "Validation": {
+                    "Settings": {
+                        "Type": "None"
+                    }
+                }
+            },
+            "PrimaryAttribute": "QID17671699",
+            "SecondaryAttribute": "(7",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "QC",
+            "Payload": null,
+            "PrimaryAttribute": "Survey Question Count",
+            "SecondaryAttribute": "87",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "AnalysisType": {
+                    "Type": "TableOnly"
+                },
+                "Choices": [
+                    {
+                        "Display": "55-59"
+                    },
+                    {
+                        "Display": "60-64"
+                    },
+                    {
+                        "Display": "65-69"
+                    },
+                    {
+                        "Display": "70-74"
+                    },
+                    {
+                        "Display": "75-79"
+                    },
+                    {
+                        "Display": "80-84"
+                    },
+                    {
+                        "Display": "85+"
+                    }
+                ],
+                "Configuration": {
+                    "VariableCount": 7
+                },
+                "DataExportTag": "Q22",
+                "QuestionDescription": "Age category:",
+                "QuestionID": "QID17671687",
+                "QuestionText": " Age category:",
+                "QuestionText_Unsafe": " Age category:",
+                "QuestionType": "MC",
+                "Randomization": {
+                    "Type": "None"
+                },
+                "Selector": "SAVR",
+                "SubSelector": "TX",
+                "Validation": {
+                    "Settings": {
+                        "Type": "None"
+                    }
+                }
+            },
+            "PrimaryAttribute": "QID17671687",
+            "SecondaryAttribute": "Age category:",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "RS",
+            "Payload": null,
+            "PrimaryAttribute": "RS_5ARGPss19xUGVM1",
+            "SecondaryAttribute": "Default Response Set",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "AnalysisType": {
+                    "Type": "TableOnly"
+                },
+                "Choices": [
+                    {
+                        "Display": "Dog"
+                    },
+                    {
+                        "Display": "Cat"
+                    },
+                    {
+                        "Display": "Both"
+                    },
+                    {
+                        "Display": "Neither"
+                    }
+                ],
+                "Configuration": {
+                    "VariableCount": 4
+                },
+                "DataExportTag": "Q19",
+                "QuestionDescription": "19",
+                "QuestionID": "QID17671683",
+                "QuestionText": " Do 19?",
+                "QuestionText_Unsafe": " Do 19",
+                "QuestionType": "MC",
+                "Randomization": {
+                    "Type": "None"
+                },
+                "Selector": "SAVR",
+                "SubSelector": "TX",
+                "Validation": {
+                    "Settings": {
+                        "Type": "None"
+                    }
+                }
+            },
+            "PrimaryAttribute": "QID17671683",
+            "SecondaryAttribute": "Do 19",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "AnalysisType": {
+                    "Type": "TableOnly"
+                },
+                "Choices": [
+                    {
+                        "Display": "Left"
+                    },
+                    {
+                        "Display": "Right"
+                    },
+                    {
+                        "Display": "Other"
+                    }
+                ],
+                "Configuration": {
+                    "VariableCount": 3
+                },
+                "DataExportTag": "Q26",
+                "QuestionDescription": "Do you 26?",
+                "QuestionID": "QID17671691",
+                "QuestionText": " Do you 26?",
+                "QuestionText_Unsafe": " Do you 26?",
+                "QuestionType": "MC",
+                "Randomization": {
+                    "Type": "None"
+                },
+                "Selector": "SAVR",
+                "SubSelector": "TX",
+                "Validation": {
+                    "Settings": {
+                        "Type": "None"
+                    }
+                }
+            },
+            "PrimaryAttribute": "QID17671691",
+            "SecondaryAttribute": "Do you 26?",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "AnalysisType": {
+                    "Type": "TableOnly"
+                },
+                "Choices": [
+                    {
+                        "Display": "Retired"
+                    },
+                    {
+                        "Display": "Employed full time"
+                    },
+                    {
+                        "Display": "Employed part time"
+                    }
+                ],
+                "Configuration": {
+                    "VariableCount": 3
+                },
+                "DataExportTag": "Q27",
+                "QuestionDescription": "Employment status:",
+                "QuestionID": "QID17671692",
+                "QuestionText": " Employment status:",
+                "QuestionText_Unsafe": " Employment status:",
+                "QuestionType": "MC",
+                "Randomization": {
+                    "Type": "None"
+                },
+                "Selector": "SAVR",
+                "SubSelector": "TX",
+                "Validation": {
+                    "Settings": {
+                        "Type": "None"
+                    }
+                }
+            },
+            "PrimaryAttribute": "QID17671692",
+            "SecondaryAttribute": "Employment status:",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "AnalysisType": {
+                    "Type": "TableOnly"
+                },
+                "Choices": [
+                    {
+                        "Display": "Excellent"
+                    },
+                    {
+                        "Display": "Good"
+                    },
+                    {
+                        "Display": "Fair"
+                    },
+                    {
+                        "Display": "Poor"
+                    }
+                ],
+                "Configuration": {
+                    "VariableCount": 4
+                },
+                "DataExportTag": "Q2",
+                "QuestionDescription": "First 2",
+                "QuestionID": "QID17671684",
+                "QuestionText": " First of all, ?",
+                "QuestionText_Unsafe": " First of all?",
+                "QuestionType": "MC",
+                "Randomization": {
+                    "Type": "None"
+                },
+                "Selector": "SAVR",
+                "SubSelector": "TX",
+                "Validation": {
+                    "Settings": {
+                        "Type": "None"
+                    }
+                }
+            },
+            "PrimaryAttribute": "QID17671684",
+            "SecondaryAttribute": "First of all",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "AnalysisType": {
+                    "Type": "TableOnly"
+                },
+                "Choices": [
+                    {
+                        "Display": "Male"
+                    },
+                    {
+                        "Display": "Female"
+                    }
+                ],
+                "Configuration": {
+                    "VariableCount": 2
+                },
+                "DataExportTag": "Q23",
+                "QuestionDescription": "Gender:",
+                "QuestionID": "QID17671688",
+                "QuestionText": " Gender:",
+                "QuestionText_Unsafe": " Gender:",
+                "QuestionType": "MC",
+                "Randomization": {
+                    "Type": "None"
+                },
+                "Selector": "SAVR",
+                "SubSelector": "TX",
+                "Validation": {
+                    "Settings": {
+                        "Type": "None"
+                    }
+                }
+            },
+            "PrimaryAttribute": "QID17671688",
+            "SecondaryAttribute": "Gender:",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "LBLK",
+            "Payload": null,
+            "PrimaryAttribute": "LS_4H0tobiMbH5qBZr",
+            "SecondaryAttribute": "GR_0rJTu2lC3cYWmrO",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "AnalysisType": {
+                    "Type": "TableOnly"
+                },
+                "Choices": [
+                    {
+                        "Display": "Daily"
+                    },
+                    {
+                        "Display": "Several times a week"
+                    },
+                    {
+                        "Display": "Weekly"
+                    },
+                    {
+                        "Display": "Several times a month"
+                    },
+                    {
+                        "Display": "Monthly or less often"
+                    }
+                ],
+                "Configuration": {
+                    "VariableCount": 5
+                },
+                "DataExportTag": "Q5",
+                "QuestionDescription": "How often does 5",
+                "QuestionID": "QID17671697",
+                "QuestionText": " How often does 5?",
+                "QuestionText_Unsafe": " How often does 5?",
+                "QuestionType": "MC",
+                "Randomization": {
+                    "Type": "None"
+                },
+                "Selector": "SAVR",
+                "SubSelector": "TX",
+                "Validation": {
+                    "Settings": {
+                        "Type": "None"
+                    }
+                }
+            },
+            "PrimaryAttribute": "QID17671697",
+            "SecondaryAttribute": "How often does 5",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "AnalysisType": {
+                    "Type": "TableOnly"
+                },
+                "Choices": [
+                    {
+                        "Display": "No treatment"
+                    },
+                    {
+                        "Display": "Medication"
+                    },
+                    {
+                        "Display": "Other"
+                    }
+                ],
+                "Configuration": {
+                    "VariableCount": 3
+                },
+                "DataExportTag": "Q20",
+                "QuestionDescription": "If 20",
+                "QuestionID": "QID17671685",
+                "QuestionText": " If 20?",
+                "QuestionText_Unsafe": " If 20?",
+                "QuestionType": "MC",
+                "Randomization": {
+                    "Type": "None"
+                },
+                "Selector": "SAVR",
+                "SubSelector": "TX",
+                "Validation": {
+                    "Settings": {
+                        "Type": "None"
+                    }
+                }
+            },
+            "PrimaryAttribute": "QID17671685",
+            "SecondaryAttribute": "If 20",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "AnalysisType": {
+                    "Type": "TextEntry"
+                },
+                "DataExportTag": "Q16",
+                "QuestionDescription": "If you have q16",
+                "QuestionID": "QID17671680",
+                "QuestionText": "<br>If you have q16?",
+                "QuestionText_Unsafe": "<br>If you q16?",
+                "QuestionType": "TE",
+                "Randomization": {
+                    "Type": "None"
+                },
+                "Selector": "SL",
+                "SubSelector": null,
+                "Validation": {
+                    "Settings": {
+                        "Type": "None"
+                    }
+                }
+            },
+            "PrimaryAttribute": "QID17671680",
+            "SecondaryAttribute": "If you have q16",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "AnalysisType": {
+                    "Type": "TableOnly"
+                },
+                "Choices": {
+                    "1": {
+                        "Display": "Without test"
+                    },
+                    "2": {
+                        "Display": "With some test"
+                    },
+                    "3": {
+                        "Display": "or, are you completely unable to Q17?"
+                    }
+                },
+                "Configuration": {
+                    "VariableCount": 3
+                },
+                "DataExportTag": "Q17",
+                "QuestionDescription": "If you q17",
+                "QuestionID": "QID17671681",
+                "QuestionText": " If you q17:",
+                "QuestionText_Unsafe": " If you have q17:",
+                "QuestionType": "MC",
+                "Randomization": {
+                    "Type": "None"
+                },
+                "Selector": "SAVR",
+                "SubSelector": "TX",
+                "Validation": {
+                    "Settings": {
+                        "Type": "None"
+                    }
+                }
+            },
+            "PrimaryAttribute": "QID17671681",
+            "SecondaryAttribute": "If you have q17",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "DataExportTag": "Q21",
+                "QuestionDescription": "Just a few",
+                "QuestionID": "QID17671686",
+                "QuestionText": " Just a few:",
+                "QuestionText_Unsafe": " Just a few:",
+                "QuestionType": "DB",
+                "Selector": "PTB",
+                "SubSelector": null
+            },
+            "PrimaryAttribute": "QID17671686",
+            "SecondaryAttribute": "Just a few",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "DataExportTag": "Q18",
+                "QuestionDescription": "Let me q18",
+                "QuestionID": "QID17671682",
+                "QuestionText": " Let me q18",
+                "QuestionText_Unsafe": " Let me q18",
+                "QuestionType": "DB",
+                "Selector": "PTB",
+                "SubSelector": null
+            },
+            "PrimaryAttribute": "QID17671682",
+            "SecondaryAttribute": "Let me q18",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "AnalysisType": {
+                    "Type": "TableOnly"
+                },
+                "ChoiceOrder": [
+                    "0",
+                    "1",
+                    "2",
+                    "3"
+                ],
+                "Choices": [
+                    {
+                        "Display": "Married"
+                    },
+                    {
+                        "Display": "Divorced"
+                    },
+                    {
+                        "Display": "Widowed"
+                    },
+                    {
+                        "Display": "Never been married"
+                    }
+                ],
+                "Configuration": {
+                    "QuestionDescriptionOption": "UseText",
+                    "VariableCount": 4
+                },
+                "DataExportTag": "Q28",
+                "Language": [],
+                "QuestionDescription": "Marital status:",
+                "QuestionID": "QID17671693",
+                "QuestionText": " Marital status:",
+                "QuestionText_Unsafe": " Marital status:",
+                "QuestionType": "MC",
+                "Randomization": {
+                    "Type": "None"
+                },
+                "Selector": "SAVR",
+                "SubSelector": "TX",
+                "Validation": {
+                    "Settings": {
+                        "ForceResponseType": "ON",
+                        "Type": "None"
+                    }
+                }
+            },
+            "PrimaryAttribute": "QID17671693",
+            "SecondaryAttribute": "Marital status:",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "AnalysisType": {
+                    "Type": "TableOnly"
+                },
+                "ChoiceOrder": [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                ],
+                "Choices": {
+                    "1": {
+                        "Display": "You can 1 (Excellent capacity)"
+                    },
+                    "2": {
+                        "Display": "You can 2 (Good capacity)"
+                    },
+                    "3": {
+                        "Display": "You can 3 (Moderate capacity)"
+                    },
+                    "4": {
+                        "Display": "You 4 (Severely impaired capacity)"
+                    },
+                    "5": {
+                        "Display": "You 5 (Completely impaired capacity)"
+                    }
+                },
+                "Configuration": {
+                    "QuestionDescriptionOption": "UseText",
+                    "VariableCount": 5
+                },
+                "DataExportTag": "Q6",
+                "Language": [],
+                "QuestionDescription": "Now, about q6",
+                "QuestionID": "QID17671698",
+                "QuestionText": " Now, about q6:",
+                "QuestionText_Unsafe": " Now, about q6:",
+                "QuestionType": "MC",
+                "Randomization": {
+                    "Type": "None"
+                },
+                "Selector": "SAVR",
+                "SubSelector": "TX",
+                "Validation": {
+                    "Settings": {
+                        "Type": "None"
+                    }
+                }
+            },
+            "PrimaryAttribute": "QID17671698",
+            "SecondaryAttribute": "Now, about q6",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "AnalysisType": {
+                    "Type": "TableOnly"
+                },
+                "ChoiceOrder": [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                ],
+                "Choices": {
+                    "1": {
+                        "Display": "Good"
+                    },
+                    "2": {
+                        "Display": "Mildly"
+                    },
+                    "3": {
+                        "Display": "Moderately"
+                    },
+                    "4": {
+                        "Display": "Severely"
+                    },
+                    "5": {
+                        "Display": "Totally"
+                    }
+                },
+                "Configuration": {
+                    "QuestionDescriptionOption": "UseText",
+                    "VariableCount": 5
+                },
+                "DataExportTag": "Q3",
+                "Language": [],
+                "QuestionDescription": "Now, q3",
+                "QuestionID": "QID17671695",
+                "QuestionText": " Now, q3:",
+                "QuestionText_Unsafe": " Now, q3:",
+                "QuestionType": "MC",
+                "Randomization": {
+                    "Type": "None"
+                },
+                "Selector": "SAVR",
+                "SubSelector": "TX",
+                "Validation": {
+                    "Settings": {
+                        "Type": "None"
+                    }
+                }
+            },
+            "PrimaryAttribute": "QID17671695",
+            "SecondaryAttribute": "Now, q3",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "AnalysisType": {
+                    "Type": "TextEntry"
+                },
+                "DataExportTag": "Q24",
+                "QuestionDescription": "Number of q24",
+                "QuestionID": "QID17671689",
+                "QuestionText": "<br>Number of q24:",
+                "QuestionText_Unsafe": "<br>Number of q24:",
+                "QuestionType": "TE",
+                "Randomization": {
+                    "Type": "None"
+                },
+                "Selector": "SL",
+                "SubSelector": null,
+                "Validation": {
+                    "Settings": {
+                        "Type": "None"
+                    }
+                }
+            },
+            "PrimaryAttribute": "QID17671689",
+            "SecondaryAttribute": "Number of q24",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "DataExportTag": "Q29",
+                "QuestionDescription": "Thank you.",
+                "QuestionID": "QID17671694",
+                "QuestionText": " Thank you.",
+                "QuestionText_Unsafe": " Thank you.",
+                "QuestionType": "DB",
+                "Selector": "PTB",
+                "SubSelector": null
+            },
+            "PrimaryAttribute": "QID17671694",
+            "SecondaryAttribute": "Thank you.",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "DataExportTag": "Q1",
+                "QuestionDescription": "We are conducting a test",
+                "QuestionID": "QID17671673",
+                "QuestionText": " We are conducting a test.",
+                "QuestionText_Unsafe": " We are conducting a test.",
+                "QuestionType": "DB",
+                "Selector": "PTB",
+                "SubSelector": null
+            },
+            "PrimaryAttribute": "QID17671673",
+            "SecondaryAttribute": "We are conducting a test",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "AnalysisType": {
+                    "Type": "TableOnly"
+                },
+                "ChoiceOrder": [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                ],
+                "Choices": {
+                    "1": {
+                        "Display": "High"
+                    },
+                    "2": {
+                        "Display": "Above average"
+                    },
+                    "3": {
+                        "Display": "Average"
+                    },
+                    "4": {
+                        "Display": "Below average"
+                    },
+                    "5": {
+                        "Display": "None"
+                    }
+                },
+                "Configuration": {
+                    "QuestionDescriptionOption": "UseText",
+                    "VariableCount": 5
+                },
+                "DataExportTag": "Q4",
+                "Language": [],
+                "QuestionDescription": "What about q4",
+                "QuestionID": "QID17671696",
+                "QuestionText": " What about q4:",
+                "QuestionText_Unsafe": " What about q4:",
+                "QuestionType": "MC",
+                "Randomization": {
+                    "Type": "None"
+                },
+                "Selector": "SAVR",
+                "SubSelector": "TX",
+                "Validation": {
+                    "Settings": {
+                        "Type": "None"
+                    }
+                }
+            },
+            "PrimaryAttribute": "QID17671696",
+            "SecondaryAttribute": "What about q4",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        },
+        {
+            "Element": "SQ",
+            "Payload": {
+                "AnalysisType": {
+                    "Type": "TableOnly"
+                },
+                "Choices": [
+                    {
+                        "Display": "Live only"
+                    },
+                    {
+                        "Display": "Live"
+                    },
+                    {
+                        "Display": "Live alone"
+                    },
+                    {
+                        "Display": "Other"
+                    }
+                ],
+                "Configuration": {
+                    "VariableCount": 4
+                },
+                "DataExportTag": "Q25",
+                "QuestionDescription": "What are your q25",
+                "QuestionID": "QID17671690",
+                "QuestionText": " What are your q25?",
+                "QuestionText_Unsafe": " What are your q25?",
+                "QuestionType": "MC",
+                "Randomization": {
+                    "Type": "None"
+                },
+                "Selector": "SAVR",
+                "SubSelector": "TX",
+                "Validation": {
+                    "Settings": {
+                        "Type": "None"
+                    }
+                }
+            },
+            "PrimaryAttribute": "QID17671690",
+            "SecondaryAttribute": "What are your q25",
+            "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+            "TertiaryAttribute": null
+        }
+    ],
+    "SurveyEntry": {
+        "CreatorID": "UR_e3UnVvV8g0t4gux",
+        "Deleted": null,
+        "DivisionID": null,
+        "LastAccessed": "0000-00-00 00:00:00",
+        "LastActivated": "0000-00-00 00:00:00",
+        "LastModified": "2015-05-12 09:18:31",
+        "SurveyActiveResponseSet": "RS_5ARGPss19xUGVM1",
+        "SurveyBrandID": "noleadtrial",
+        "SurveyCreationDate": "2015-05-12 09:18:31",
+        "SurveyDescription": "Health Status Survey - Copy",
+        "SurveyExpirationDate": "0000-00-00 00:00:00",
+        "SurveyID": "SV_1MMcjvoGWqh8uUZ",
+        "SurveyLanguage": "EN",
+        "SurveyName": "Health Status Survey - Copy",
+        "SurveyOwnerID": "UR_e3UnVvV8g0t4gux",
+        "SurveyStartDate": "0000-00-00 00:00:00",
+        "SurveyStatus": "Inactive"
+    }
+}

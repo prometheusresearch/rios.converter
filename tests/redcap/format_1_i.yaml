@@ -1,0 +1,165 @@
+id: urn:format_1
+record:
+- description: Study ID
+  id: study_id
+  identifiable: false
+  required: false
+  type: text
+- description: Date of consent
+  id: date_enrolled
+  identifiable: false
+  required: false
+  type: dateTime
+- description: First Name
+  id: first_name
+  identifiable: true
+  required: false
+  type: text
+- description: Last Name
+  id: last_name
+  identifiable: true
+  required: false
+  type: text
+- description: Street, City, State, ZIP
+  id: address
+  identifiable: true
+  required: false
+  type: text
+- description: Phone number
+  id: telephone_1
+  identifiable: true
+  required: false
+  type: text
+- description: Second phone number
+  id: telephone_2
+  identifiable: true
+  required: false
+  type: text
+- description: E-mail
+  id: email
+  identifiable: true
+  required: false
+  type: text
+- description: Gender
+  id: sex
+  identifiable: false
+  required: true
+  type:
+    base: enumeration
+    enumerations:
+      id_0: null
+      id_1: null
+- description: Has the subject given birth before?
+  id: given_birth
+  identifiable: false
+  required: false
+  type:
+    base: enumeration
+    enumerations:
+      id_0: null
+      id_1: null
+- description: How many times has the subject given birth?
+  id: num_children
+  identifiable: false
+  required: false
+  type:
+    base: integer
+    range:
+      min: 0
+- description: Ethnicity
+  id: ethnicity
+  identifiable: false
+  required: false
+  type:
+    base: enumeration
+    enumerations:
+      id_0: null
+      id_1: null
+      id_2: null
+- description: Race
+  id: race
+  identifiable: false
+  required: false
+  type:
+    base: enumerationSet
+    enumerations:
+      id_0: null
+      id_1: null
+      id_2: null
+      id_3: null
+- description: How much slide
+  id: sliderq
+  identifiable: false
+  required: false
+  type:
+    base: float
+    range:
+      max: 100.0
+      min: 0.0
+- description: T or F
+  id: truefalseq
+  identifiable: false
+  required: false
+  type:
+    base: enumeration
+    enumerations:
+      'false':
+        description: 'False'
+      'true':
+        description: 'True'
+- description: Y or N
+  id: yesnoq
+  identifiable: false
+  required: false
+  type:
+    base: enumeration
+    enumerations:
+      'no':
+        description: 'No'
+      'yes':
+        description: 'Yes'
+- description: Date of birth
+  id: dob
+  identifiable: true
+  required: false
+  type: dateTime
+- description: Height (cm)
+  id: height
+  identifiable: false
+  required: false
+  type:
+    base: float
+    range:
+      max: 215.0
+      min: 130.0
+- description: Weight (kilograms)
+  id: weight
+  identifiable: false
+  required: false
+  type:
+    base: integer
+    range:
+      max: 200
+      min: 35
+- description: Date of first treatment
+  id: info
+  identifiable: false
+  required: false
+  type: dateTime
+- description: Days of the week patient is tested
+  id: schedule_days
+  identifiable: false
+  required: false
+  type:
+    base: enumeration
+    enumerations:
+      id_0: null
+      id_1: null
+      id_2: null
+- description: Comments
+  id: comments
+  identifiable: false
+  required: false
+  type: text
+title: format_1
+version: '1.0'

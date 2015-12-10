@@ -1,0 +1,262 @@
+defaultLocalization: en
+instrument:
+  id: urn:format_1
+  version: '1.0'
+pages:
+- elements:
+  - options:
+      fieldId: study_id
+      text:
+        en: Study ID
+      widget:
+        type: inputText
+    type: question
+  - options:
+      text:
+        en: Demographic Attributes
+    type: header
+  - options:
+      fieldId: date_enrolled
+      help:
+        en: YYYY-MM-DD
+      text:
+        en: Date of consent
+      widget:
+        type: dateTimePicker
+    type: question
+  - options:
+      fieldId: first_name
+      text:
+        en: First Name
+      widget:
+        type: inputText
+    type: question
+  - options:
+      fieldId: last_name
+      text:
+        en: Last Name
+      widget:
+        type: inputText
+    type: question
+  - options:
+      text:
+        en: Contact Information
+    type: header
+  - options:
+      fieldId: address
+      text:
+        en: Street, City, State, ZIP
+      widget:
+        type: textArea
+    type: question
+  - options:
+      fieldId: telephone_1
+      help:
+        en: Include Area Code
+      text:
+        en: Phone number
+      widget:
+        type: inputText
+    type: question
+  - options:
+      fieldId: telephone_2
+      help:
+        en: Include Area Code
+      text:
+        en: Second phone number
+      widget:
+        type: inputText
+    type: question
+  - options:
+      fieldId: email
+      text:
+        en: E-mail
+      widget:
+        type: inputText
+    type: question
+  - options:
+      enumerations:
+      - id: id_0
+        text:
+          en: Female
+      - id: id_1
+        text:
+          en: Male
+      fieldId: sex
+      text:
+        en: Gender
+      widget:
+        type: dropDown
+    type: question
+  - options:
+      enumerations:
+      - id: id_0
+        text:
+          en: 'No'
+      - id: id_1
+        text:
+          en: 'Yes'
+      events:
+      - action: disable
+        trigger: '!(assessment["sex"] = "0")'
+      fieldId: given_birth
+      text:
+        en: Has the subject given birth before?
+      widget:
+        type: dropDown
+    type: question
+  - options:
+      events:
+      - action: disable
+        trigger: '!(assessment["sex"] = "0" and assessment["given_birth"] = "1")'
+      fieldId: num_children
+      text:
+        en: How many times has the subject given birth?
+      widget:
+        type: inputNumber
+    type: question
+  - options:
+      enumerations:
+      - id: id_0
+        text:
+          en: Left Handed
+      - id: id_1
+        text:
+          en: NOT Left Handed
+      - id: id_2
+        text:
+          en: Unknown / Not Reported
+      fieldId: ethnicity
+      text:
+        en: Ethnicity
+      widget:
+        type: radioGroup
+    type: question
+  - options:
+      enumerations:
+      - id: id_0
+        text:
+          en: Human
+      - id: id_1
+        text:
+          en: Android
+      - id: id_2
+        text:
+          en: More Than One Race
+      - id: id_3
+        text:
+          en: Unknown / Not Reported
+      fieldId: race
+      text:
+        en: Race
+      widget:
+        type: checkGroup
+    type: question
+  - options:
+      fieldId: sliderq
+      text:
+        en: How much slide
+      widget:
+        type: inputNumber
+    type: question
+  - options:
+      enumerations:
+      - id: 'true'
+        text:
+          en: 'True'
+      - id: 'false'
+        text:
+          en: 'False'
+      fieldId: truefalseq
+      text:
+        en: T or F
+      widget:
+        type: radioGroup
+    type: question
+  - options:
+      enumerations:
+      - id: 'yes'
+        text:
+          en: 'Yes'
+      - id: 'no'
+        text:
+          en: 'No'
+      fieldId: yesnoq
+      text:
+        en: Y or N
+      widget:
+        type: radioGroup
+    type: question
+  - options:
+      fieldId: dob
+      help:
+        en: YYYY-MM-DD
+      text:
+        en: Date of birth
+      widget:
+        type: dateTimePicker
+    type: question
+  - options:
+      fieldId: height
+      help:
+        en: cm
+      text:
+        en: Height (cm)
+      widget:
+        type: inputNumber
+    type: question
+  - options:
+      fieldId: weight
+      help:
+        en: kilograms
+      text:
+        en: Weight (kilograms)
+      widget:
+        type: inputNumber
+    type: question
+  id: demographics
+- elements:
+  - options:
+      text:
+        en: Information
+    type: header
+  - options:
+      fieldId: info
+      help:
+        en: DD-MM-YYYYY
+      text:
+        en: Date of first treatment
+      widget:
+        type: dateTimePicker
+    type: question
+  - options:
+      enumerations:
+      - id: id_0
+        text:
+          en: Monday-Wednesday-Friday
+      - id: id_1
+        text:
+          en: Tuesday-Thursday-Saturday
+      - id: id_2
+        text:
+          en: Other
+      fieldId: schedule_days
+      text:
+        en: Days of the week patient is tested
+      widget:
+        type: radioGroup
+    type: question
+  - options:
+      text:
+        en: General Comments
+    type: header
+  - options:
+      fieldId: comments
+      text:
+        en: Comments
+      widget:
+        type: textArea
+    type: question
+  id: info
+title:
+  en: format_1
