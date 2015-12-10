@@ -31,6 +31,15 @@
           <INPUT type="text" name="localization"><BR>
       </P>
       <P>
+      The converter determines the input format from each input file extension:
+      <b>.yaml</b> or <b>.yml</b> for YAML, and
+      <b>.json</b> for JSON.
+      Otherwise it uses the following:<br>
+      <LABEL for="format">Default input format: </LABEL>
+          <INPUT type="radio" name="format" value="json"> JSON
+          <INPUT type="radio" checked name="format" value="yaml"> YAML<BR>
+      </P>
+      <P>
       <INPUT type="submit" value="Send"> <INPUT type="reset">
       </P>
     </FORM>

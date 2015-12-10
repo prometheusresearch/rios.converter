@@ -58,12 +58,12 @@ class ConvertToRios(Command):
     access = 'anybody'
     parameters = [
         Parameter('system', StrVal('(qualtrics)|(redcap)'), ),
-        Parameter('format', StrVal('(yaml)|(json)'), default='yaml'),
-        Parameter('instrument_title', StrVal('.+')),
-        Parameter('instrument_id', StrVal('[a-z][a-z0-9_]*')),
+        Parameter('format', StrVal('(yaml)|(json)')),
+        Parameter('instrument_title', StrVal('.*')),
+        Parameter('instrument_id', StrVal('([a-z][a-z0-9_]*)?')),
         Parameter('instrument_version', StrVal('(\d+\.\d+)?')),
-        Parameter('localization', StrVal('.*'), default='en'),
-        Parameter('outname', StrVal('.+'), default='rios'),
+        Parameter('localization', StrVal('.*')),
+        Parameter('outname', StrVal('.*')),
         Parameter('infile', AnyVal()),
         ]
 
@@ -87,12 +87,25 @@ class ConvertToRios(Command):
         tempfile.tempdir = self.settings.temp_dir
         temp_dir = tempfile.mkdtemp()
         outfile_prefix = os.path.join(temp_dir, outname)
+        errors = []
+        if not hasattr(infile, 'file'):
+            errors.append('Input file is required.')
+        if not outname:
+            errors.append('Output filename prefix is required.')
+        if not instrument_version:
+            instrument_version = '1.0'
         args = [
-                '--id', instrument_id,
                 '--infile', '-',  # stdin
                 '--outfile-prefix', outfile_prefix,
-                '--instrument-version', instrument_version,
-                '--title', instrument_title, ]
+                '--instrument-version', instrument_version, ]
+        if system == 'redcap':
+            if not instrument_id:
+                errors.append('Instrument ID is required.')
+            if not instrument_title:
+                errors.append('Instrument Title is required.') 
+            args.extend([
+                '--id', instrument_id,
+                '--title', instrument_title, ])
         if localization:
             args.extend(['--localization', localization])
         if format:
@@ -101,6 +114,12 @@ class ConvertToRios(Command):
             format = 'yaml'
         error_filename = outfile_prefix + '.stderr'
 
+        if errors:
+            shutil.rmtree(temp_dir)
+            return Response(json={
+                    "status": 400,
+                    "errors": errors
+                    })        
         with open(error_filename, 'wb') as stderr:
             sys.stdin = infile.file
             # I can't explain why I am
@@ -150,12 +169,12 @@ class ConvertFromRios(Command):
     access = 'anybody'
     parameters = [
         Parameter('system', StrVal('(qualtrics)|(redcap)'), ),
-        Parameter('format', StrVal('(yaml)|(json)'), default='yaml'),
-        Parameter('localization', StrVal('.*'), default='en'),
+        Parameter('format', StrVal('(yaml)|(json)')),
+        Parameter('localization', StrVal('.*')),
         Parameter('instrument_file', AnyVal()),
         Parameter('form_file', AnyVal()),
         Parameter('calculationset_file', AnyVal()),
-        Parameter('outname', StrVal('.+')), ]
+        Parameter('outname', StrVal('.*')), ]
 
     converter_class = {
         'qualtrics': QualtricsFromRios,
@@ -182,6 +201,10 @@ class ConvertFromRios(Command):
         self.temp_dir = tempfile.mkdtemp()
         outfile = os.path.join(self.temp_dir, outname)
         errors = []
+        if not outname:
+            errors.append('Output filename prefix is required.')
+        if not format:
+            format = 'yaml'
         args = [
                 '--verbose',
                 '--format', format,
@@ -303,15 +326,3 @@ class HomeCmd(Command):
                 response.body,
                 writer_name='html')
         return Response(html_output)
-
-
-class HelloCmd(Command):
-
-    path = '/hello'
-    access = 'anybody'
-    parameters = [
-        Parameter('name', StrVal('[A-Za-z]+'), default='World'),
-    ]
-
-    def render(self, req, name):
-        return Response("Hello, %s!" % name, content_type='text/plain')
