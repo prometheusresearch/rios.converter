@@ -17,6 +17,9 @@ Installation
 ============
 
 rios.converter is a rex.web application which needs no database.
+Access to all pages is granted to **anybody**, 
+so no authentication is required.  
+This converter should be available to the general public.
 
 ::
 
