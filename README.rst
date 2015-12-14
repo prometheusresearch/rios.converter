@@ -26,8 +26,7 @@ This converter should be available to the general public.
     $ virtualenv --system-site-packages rios.converter
     $ cd rios.converter
     $ . bin/activate
-    $ hg clone ssh://hg@bitbucket.org/prometheus/rios.converter
-    $ pip install -e rios.converter
+    $ pip install rios.converter
 
 Create a simple **rex.yaml**.  For example::
 
