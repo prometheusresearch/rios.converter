@@ -36,6 +36,10 @@ Create a simple **rex.yaml**.  For example::
         uwsgi-socket: localhost:5839
     !
 
+Create the directory for the temporary files::
+
+    $ mkdir temp
+
 Start the server::
 
     $ rex start

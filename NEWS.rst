@@ -3,6 +3,11 @@ Change History
 **************
 
 
+0.1.2 (2015-12-15)
+==================
+
+* create temp_dir directory during installation
+
 0.1.1 (2015-12-14)
 ==================
 
