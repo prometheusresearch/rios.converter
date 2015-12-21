@@ -8,12 +8,12 @@ from setuptools import setup, find_packages
 
 setup(
     name='rios.converter',
-    version='0.2.1',
+    version='0.2.2',
     description="RIOS converter website",
     long_description=open('README.rst', 'r').read(),
     maintainer="Prometheus Research, LLC",
     maintainer_email="contact@prometheusresearch.com",
-    license="AGPLv3",
+    license="Apache Software License 2.0",
     url="https://bitbucket.org/prometheus/rios.converter",
     package_dir={'': 'src'},
     packages=find_packages('src'),
