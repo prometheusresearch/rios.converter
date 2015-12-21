@@ -1,5 +1,5 @@
-RexDB |R| Free Software License
-===============================
+Free Software License
+=====================
 
 Copyright |c| 2015 Prometheus Research, LLC.
 All rights reserved.
@@ -18,4 +18,3 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 .. |c| unicode:: 0xA9 .. copyright sign
-.. |R| unicode:: 0xAE .. registered trademark sign

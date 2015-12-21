@@ -1,4 +1,4 @@
-**Prometheus Research RIOS Instrument Converter** !
+**RIOS Instrument Converter**
 
 This free service may be used to convert research instruments
 to and from `RIOS`_, the Research Instrument Open Standard.
