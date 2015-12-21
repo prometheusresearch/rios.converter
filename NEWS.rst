@@ -3,6 +3,11 @@ Change History
 **************
 
 
+0.2.0 (2015-12-21)
+==================
+
+* added convert.rst; switch to Apache License
+
 0.1.2 (2015-12-15)
 ==================
 

@@ -11,7 +11,7 @@ Overview
 This package implements the RIOS conversion server which provides an API
 to the conversions implemented in `rios.conversion`_
 
-See the `home page source`_ for more details.
+See the `convert page source`_ for more details.
 
 Installation
 ============
@@ -45,5 +45,5 @@ Start the server::
     $ rex start
 
 .. _rios.conversion: https://bitbucket.org/prometheus/rios.conversion/overview 
-.. _home page source: https://bitbucket.org/prometheus/rios.converter/src/tip/static/templates/home.rst
+.. _convert page source: https://bitbucket.org/prometheus/rios.converter/src/tip/static/templates/convert.rst
 

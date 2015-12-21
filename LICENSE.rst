@@ -1,52 +1,21 @@
 RexDB |R| Free Software License
 ===============================
 
-Copyright |c| 2006-2015 Prometheus Research, LLC.
+Copyright |c| 2015 Prometheus Research, LLC.
 All rights reserved.
 
 This program is free software: you can use, redistribute, and/or modify
-it under the terms of the GNU Affero General Public License, version 3
-or later ("AGPL"), as published by the Free Software Foundation, and as
-supplemented by additional terms according to section 7 of the AGPL:
+it under the terms of the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-This Program was created by Prometheus Research and other contributors
-to the RexDB Platform (http://rexdb.org).  As permitted by section 7b 
-of the AGPL, we require preservation of copyright notices and author
-attributions in this Program's documentation and Appropriate Legal
-Notices.  This Program displays a "RexDB by Prometheus Research" notice
-in its "about" command line option and in its graphical "about" dialog.
-In the graphical display of these notices, author attributions may also 
-include a graphical logo for this and other software programs.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-For works containing this Program or any covered work, each interactive
-user interface must include a prominent and conveniently accessible
-feature for the display of Appropriate Legal Notices.  This display
-must include author attributions and copyright notices as found in this
-Program.  This display of these author attributions must be convenient
-for a user wishing to browse credits, shown in a manner separate and
-distinct from license texts, and commensurately prominent with respect
-to other author attributions.  To the extent that it is technically
-feasible and not obtrusive, the graphical form of these author
-attributions must be preserved in the Appropriate Legal Notices;
-otherwise, a textual equivalent is permitted.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-Additional permissions, which may be removed at your option, under
-GNU AGPL version 3 section 7:
-
-If you modify this Program, or any covered work, by linking or combining
-it with parts that are otherwise independent works covered by the terms
-of GNU GPL version 2, the licensors of this Program grant you additional
-permission to convey the entire combined work containing those parts.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 .. |c| unicode:: 0xA9 .. copyright sign
 .. |R| unicode:: 0xAE .. registered trademark sign
-
-

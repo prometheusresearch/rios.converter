@@ -31,6 +31,34 @@ class TempDirSetting(Setting):
     validate = StrVal()
 
 
+class HomeCmd(Command):
+
+    path = '/'
+    access = 'anybody'
+    template = 'rios.converter:/templates/home.rst'
+
+    def render(self, req):
+        response = render_to_response(self.template, req, status=200)
+        html_output = docutils.core.publish_string(
+                response.body,
+                writer_name='html')
+        return Response(html_output)
+
+
+class Convert(Command):
+
+    path = '/convert'
+    access = 'anybody'
+    template = 'rios.converter:/templates/convert.rst'
+
+    def render(self, req):
+        response = render_to_response(self.template, req, status=200)
+        html_output = docutils.core.publish_string(
+                response.body,
+                writer_name='html')
+        return Response(html_output)
+
+
 class ConvertFrom(Command):
 
     path = '/convert/from'
@@ -314,17 +342,3 @@ class HandlePing(HandleLocation):
 
     def __call__(self, req):
         return Response(content_type='text/plain', body="pong!")
-
-
-class HomeCmd(Command):
-
-    path = '/'
-    access = 'anybody'
-    template = 'rios.converter:/templates/home.rst'
-
-    def render(self, req):
-        response = render_to_response(self.template, req, status=200)
-        html_output = docutils.core.publish_string(
-                response.body,
-                writer_name='html')
-        return Response(html_output)

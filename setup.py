@@ -8,7 +8,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='rios.converter',
-    version='0.1.2',
+    version='0.2.0',
     description="RIOS converter website",
     long_description=open('README.rst', 'r').read(),
     maintainer="Prometheus Research, LLC",
