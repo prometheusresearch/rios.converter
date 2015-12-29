@@ -1,2 +1,2 @@
 access: {}
-temp_dir: temp
+temp_dir: /tmp
