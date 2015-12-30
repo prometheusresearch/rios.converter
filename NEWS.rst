@@ -7,6 +7,7 @@ Change History
 ==================
 
 * fix spelling error in from_rios.html
+* fix urls in convert.rst
 
 0.2.3 (2015-12-29)
 ==================

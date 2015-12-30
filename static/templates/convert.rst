@@ -8,7 +8,7 @@ To convert an instrument from another system to RIOS,
 POST an **enctype="multipart/form-data"** request 
 to:
 
-  **{{PATH_URL}}convert/to/rios?**\ *parameters*
+  **{{PATH_URL}}/to/rios?**\ *parameters*
 
 parameters:
 
@@ -58,7 +58,7 @@ To convert an instrument from RIOS to another system,
 POST an **enctype="multipart/form-data"** request 
 to:
 
-  **{{PATH_URL}}convert/from/rios?**\ *parameters*
+  **{{PATH_URL}}/from/rios?**\ *parameters*
 
 parameters:
 
