@@ -3,6 +3,11 @@ Change History
 **************
 
 
+0.2.5 (2016-07-08)
+==================
+
+* Add html templates with styling to match docs
+
 0.2.4 (2015-12-30)
 ==================
 
