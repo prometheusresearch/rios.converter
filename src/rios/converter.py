@@ -35,14 +35,26 @@ class HomeCmd(Command):
 
     path = '/'
     access = 'anybody'
-    template = 'rios.converter:/templates/home.rst'
+    #template = 'rios.converter:/templates/home.rst'
+    template = 'rios.converter:/templates/home.html'
 
     def render(self, req):
-        response = render_to_response(self.template, req, status=200)
-        html_output = docutils.core.publish_string(
-                response.body,
-                writer_name='html')
-        return Response(html_output)
+        return render_to_response(self.template, req, status=200)
+        #response = render_to_response(self.template, req, status=200)
+        #html_output = docutils.core.publish_string(
+        #        response.body,
+        #        writer_name='html')
+        #return Response(html_output)
+
+
+class ConvertDoc(Command):
+
+    path = '/convertdoc'
+    access = 'anybody'
+    template = 'rios.converter:/templates/convert.html'
+
+    def render(self, req):
+        return render_to_response(self.template, req, status=200)
 
 
 class Convert(Command):
