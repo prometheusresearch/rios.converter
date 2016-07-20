@@ -1,10 +1,13 @@
 import tempfile
+import traceback
+import datetime
 
 from rex.core import get_packages
 from rex.core import get_settings
 from rex.core import AnyVal
 from rex.core import StrVal
 from rex.core import Setting
+from rex.core import Initialize, Error
 from rex.web import Command
 from rex.web import HandleError
 from rex.web import HandleFile
@@ -29,6 +32,35 @@ class TempDirSetting(Setting):
     name = 'temp_dir'
     default = None
     validate = StrVal()
+
+class LogDirSetting(Setting):
+    """Directory to log conversion activities to for future research/analysis"""
+    name = 'log_dir'
+    validate = StrVal()
+
+
+class ConverterInitialize(Initialize):
+    def __call__(self):
+        log_dir = get_settings().log_dir
+        if not os.path.isdir(log_dir):
+            raise Error('Log Directory (%s) doesn\'t exist' % (log_dir,))
+        if not os.access(log_dir, os.R_OK|os.W_OK|os.X_OK):
+            raise Error('Log Directory (%s) not writable' % (log_dir,))
+
+
+def log(session, filename, content):
+    log_dir = os.path.join(get_settings().log_dir, session)
+    if not os.path.isdir(log_dir):
+        os.makedirs(log_dir)
+    fp = open(os.path.join(log_dir, filename), 'wb')
+    fp.write(content)
+    fp.close()
+
+def log_file(session, filepath):
+    log_dir = os.path.join(get_settings().log_dir, session)
+    if not os.path.isdir(log_dir):
+        os.makedirs(log_dir)
+    shutil.copy(filepath, log_dir)
 
 
 class HomeCmd(Command):
@@ -123,6 +155,7 @@ class ConvertToRios(Command):
             outname,
             infile):
 
+        session = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
         self.settings = get_settings()
         tempfile.tempdir = self.settings.temp_dir
         temp_dir = tempfile.mkdtemp()
@@ -160,6 +193,7 @@ class ConvertToRios(Command):
                     "status": 400,
                     "errors": errors
                     })
+        crash = None
         with open(error_filename, 'wb') as stderr:
             sys.stdin = infile.file
             # I can't explain why I am
@@ -173,9 +207,20 @@ class ConvertToRios(Command):
             except Exception, e:
                 result = -1
                 errors.append(str(e))
+                crash = traceback.format_exc()
+            finally:
+                sys.stderr = sys.__stderr__
         if result > 0:
             with open(error_filename, 'r') as err:
                 errors.append(err.read())
+
+        log(session, '%s_to_rios' % (system,), '')
+        infile.file.seek(0)
+        log(session, 'infile', infile.file.read())
+        log(session, 'args', repr(args))
+        if crash:
+            log(session, 'crash', crash)
+
         if result == 0:
             zip_filename = outfile_prefix + '.zip'
             z = zipfile.ZipFile(zip_filename, 'w')
@@ -189,12 +234,14 @@ class ConvertToRios(Command):
                 body = z.read()
             name = outname + '.zip'
             shutil.rmtree(temp_dir)
+            log(session, 'output.zip', body)
             return Response(
                     content_type='application/zip',
                     content_disposition='attachment; filename="%s"' % name,
                     body=body)
         else:
             shutil.rmtree(temp_dir)
+            log(session, 'errors', repr(errors))
             return Response(json={
                     "result": str(result),
                     "args": args,
@@ -221,10 +268,11 @@ class ConvertFromRios(Command):
         'redcap': RedcapFromRios,
         }
 
-    def load_file(self, file_field):
+    def load_file(self, session, file_field):
         filename = os.path.join(self.temp_dir, file_field.filename)
         with open(filename, 'w') as fo:
             fo.write(file_field.file.read())
+        log_file(session, filename)
         return filename
 
     def render(
@@ -238,6 +286,7 @@ class ConvertFromRios(Command):
             calculationset_file,
             outname):
 
+        session = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
         self.settings = get_settings()
         tempfile.tempdir = self.settings.temp_dir
         self.temp_dir = tempfile.mkdtemp()
@@ -255,19 +304,19 @@ class ConvertFromRios(Command):
         if hasattr(instrument_file, 'filename'):
             args.extend([
                     '--instrument',
-                    '%s' % self.load_file(instrument_file)])
+                    '%s' % self.load_file(session, instrument_file)])
         else:
             errors.append('An input instrument file is required.')
         if hasattr(form_file, 'filename'):
             args.extend([
                     '--form',
-                    '%s' % self.load_file(form_file)])
+                    '%s' % self.load_file(session, form_file)])
         else:
             errors.append('An input form file is required.')
         if hasattr(calculationset_file, 'filename'):
             args.extend([
                     '--calculationset',
-                    '%s' % self.load_file(calculationset_file)])
+                    '%s' % self.load_file(session, calculationset_file)])
         if localization:
             args.extend(['--localization', localization])
         if errors:
@@ -276,6 +325,7 @@ class ConvertFromRios(Command):
                     "status": 400,
                     "errors": errors
                     })
+        crash = None
         error_filename = outfile + '.stderr'
         with open(error_filename, 'wb') as stderr:
             # I can't eplain why I am
@@ -288,9 +338,18 @@ class ConvertFromRios(Command):
             except Exception, e:
                 result = -1
                 errors.append(str(e))
+                crash = traceback.format_exc()
+            finally:
+                sys.stderr = sys.__stderr__
         if result > 0:
             with open(error_filename, 'rb') as err:
                 errors.append(err.read())
+
+        log(session, 'rios_to_%s' % (system,), '')
+        log(session, 'args', repr(args))
+        if crash:
+            log(session, 'crash', crash)
+
         if result == 0:
             zip_filename = outfile + '.zip'
             z = zipfile.ZipFile(zip_filename, 'w')
@@ -302,12 +361,14 @@ class ConvertFromRios(Command):
                 body = z.read()
             name = outname + '.zip'
             shutil.rmtree(self.temp_dir)
+            log(session, 'output.zip', body)
             return Response(
                     content_type='application/zip',
                     content_disposition='attachment; filename="%s"' % name,
                     body=body)
         else:
             shutil.rmtree(self.temp_dir)
+            log(session, 'errors', repr(errors))
             return Response(json={
                     "result": str(result),
                     "args": args,
