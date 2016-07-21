@@ -3,6 +3,13 @@ Change History
 **************
 
 
+0.3.0 (2016-xx-xx)
+==================
+
+* Added logging to the conversion mechanism so that analysis can occur on
+  errors or problematic conversions.
+* Added basic validation to the Instrument ID input on REDCap->RIOS conversions
+
 0.2.6 (2016-07-12)
 ==================
 

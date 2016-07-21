@@ -131,7 +131,7 @@ class ConvertToRios(Command):
         Parameter('system', StrVal('(qualtrics)|(redcap)'), ),
         Parameter('format', StrVal('(yaml)|(json)')),
         Parameter('instrument_title', StrVal('.*')),
-        Parameter('instrument_id', StrVal('([a-z][a-z0-9_]*)?')),
+        Parameter('instrument_id', StrVal('([a-z0-9]{3}[a-z0-9]*)?')),
         Parameter('instrument_version', StrVal('(\d+\.\d+)?')),
         Parameter('localization', StrVal('.*')),
         Parameter('outname', StrVal('.*')),
@@ -177,7 +177,7 @@ class ConvertToRios(Command):
             if not instrument_title:
                 errors.append('Instrument Title is required.')
             args.extend([
-                '--id', instrument_id,
+                '--id', 'urn:%s' % (instrument_id,),
                 '--title', instrument_title, ])
         if localization:
             args.extend(['--localization', localization])
