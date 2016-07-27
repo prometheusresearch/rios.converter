@@ -11,16 +11,18 @@
     <p>
       * Because {% if 'redcap' in system %}REDCap{% else %}Qualtrics{% endif %} is not open source, the codes and standards are not available for direct review and use. We’ve reconstructed the instrument standard from a representative set of publicly available test cases, but new edge cases occasionally come up. This file contains such an example; we will investigate and attempt to handle this edge case in a future release.
     </p>
+    <br/>
     <div class="panel panel-default">
       <div class="panel-heading">
         Error Results
       </div>
       <div class="panel-body">
-        Results: {{ result|e }}
-        <br/>
-        Arguments: {{ args|e }}
-        <br/>
-        Errors: {{ errors|e }}
+        Errors:
+          <ul>
+            {% for error in errors %}
+              <li>{{ error|e }}</li>
+            {% endfor %}
+          </ul>
       </div>
     </div>
   </div>
