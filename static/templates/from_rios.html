@@ -1,130 +1,47 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>From RIOS</title>
-    <style>
-    html {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-    }
-    body {
-        margin: 0px;
-        height: 100%;
-    }
-    .related {
-        background-color: #6BA81E;
-        width: 100%;
-        height: 30px;
-        color: white;
-    }
-    .section {
-        margin-top: 0;
-        font-size: 200%;
-        font-family: Arial, sans-serif;
-        background-color: #BED4EB;
-        font-weight: normal;
-        color: #212224;
-        margin: 30px 0px 10px 0px;
-        padding: 5px 0 5px 10px;
-        text-shadow: 0px 1px 0 white;
-    }
-    h2.section {
-        font-size: 150%;
-        background-color: #C8D5E3;
-    }
-    h3.section {
-        font-family: Arial, sans-serif;
-        color: #222;
-        font-size: 0.9em;
-        font-weight: normal;
-        margin: 0;
-        padding: 5px 10px;
-        background-color: #ddd;
-        text-shadow: 1px 1px 0 white;
-    }
-    .sidebar {
-        float: left;
-        width: 230px;
-        height: 100%;
-        font-size: 90%;
-        font-family: Arial, sans-serif;
-        font-size: 100%;
-        background-color: #eee;
-        color: #555;
-        padding: 5px;
-    }
-    .main {
-        margin: 10px;
-        margin-left: 240px;
-        padding: 10px;
-    }
-    .title {
-        margin: 3px;
-        padding: 3px;
-        font-family: Arial, sans-serif;
-        line-height: 32px;
-        color: #fff;
-        text-shadow: 0px 1px 0 #444;
-        font-size: 0.9em;
-    }
-    </style>
-  </head>
-  <body>
-    <div class="related">
-        <label class="title">rios.converter</label>
-    </div>
-    <div class="sidebar">
-        <br/>
-        <h3 class="section">Home</h3>
-        <br/>
-        <a href="../">RIOS Converter Home</a>
-        <br/>
-        <br/>
-    </div>
-    <div class="main">
-
-      <h1 class="section">Convert from RIOS</h1>
-
-      <FORM action="{{PATH_URL}}/rios" method="post" enctype="multipart/form-data">
-        <P>
-        <LABEL for="system">Convert To: </LABEL>
-            <INPUT type="radio" name="system" value="qualtrics"/> Qualtrics
-            <INPUT type="radio" checked name="system" value="redcap"/> REDCap<BR/>
-        </P>
-        <P>
-        <LABEL for="instrument_file">Input Instrument: </LABEL>
-            <INPUT type="file" name="instrument_file"/><BR/>
-        <LABEL for="form_file">Input Form: </LABEL>
-            <INPUT type="file" name="form_file"/><BR/>
-        <LABEL for="calculationset_file">Input CalculationSet (optional): </LABEL>
-            <INPUT type="file" name="calculationset_file"/><BR/>
-        </P>
-        <P>
-        <LABEL for="outname">Output filename prefix: </LABEL>
-            <INPUT type="text" name="outname"/><BR/>
-        </P>
-        <P>
-        RIOS forms are multi-lingual. 
-        Which language do you want to extract?<br/>
-        <LABEL for="localization">Language code (default is <b>en</b>): </LABEL>
-            <INPUT type="text" name="localization"/><BR/>
-        </P>
-        <P>
-        The converter determines the input format from each input file extension:
-        <b>.yaml</b> or <b>.yml</b> for YAML, and
-        <b>.json</b> for JSON.
-        Otherwise it uses the following:<br/>
-        <LABEL for="format">Default input format: </LABEL>
-            <INPUT type="radio" name="format" value="json"/> JSON
-            <INPUT type="radio" checked name="format" value="yaml"/> YAML<BR/>
-        </P>
-        <P>
-        <INPUT type="submit" value="Send"/> <INPUT type="reset"/>
-        </P>
-      </FORM>
-
-    </div>    
-  </body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+<div class="panel panel-info">
+  <div class="panel-heading">
+    <h4>Convert from RIOS</h4>
+  </div>
+  <div class="panel-body">
+    <FORM action="{{PATH_URL}}/rios" method="post" enctype="multipart/form-data">
+      <P>
+      <LABEL for="system">Convert To: </LABEL>
+          <INPUT type="radio" name="system" value="qualtrics"/> Qualtrics
+          <INPUT type="radio" checked name="system" value="redcap"/> REDCap<BR/>
+      </P>
+      <P>
+      <LABEL for="instrument_file">Input Instrument: </LABEL>
+          <INPUT type="file" name="instrument_file"/><BR/>
+      <LABEL for="form_file">Input Form: </LABEL>
+          <INPUT type="file" name="form_file"/><BR/>
+      <LABEL for="calculationset_file">Input CalculationSet (optional): </LABEL>
+          <INPUT type="file" name="calculationset_file"/><BR/>
+      </P>
+      <P>
+      <LABEL for="outname">Output filename prefix: </LABEL>
+          <INPUT type="text" name="outname"/><BR/>
+      </P>
+      <P>
+      RIOS forms are multi-lingual. 
+      Which language do you want to extract?<br/>
+      <LABEL for="localization">Language code (default is <b>en</b>): </LABEL>
+          <INPUT type="text" name="localization"/><BR/>
+      </P>
+      <P>
+      The converter determines the input format from each input file extension:
+      <b>.yaml</b> or <b>.yml</b> for YAML, and
+      <b>.json</b> for JSON.
+      Otherwise it uses the following:<br/>
+      <LABEL for="format">Default input format: </LABEL>
+          <INPUT type="radio" name="format" value="json"/> JSON
+          <INPUT type="radio" checked name="format" value="yaml"/> YAML<BR/>
+      </P>
+      <P>
+      <INPUT type="submit" value="Send"/> <INPUT type="reset"/>
+      </P>
+    </FORM>
+  </div>
+</div>
+{% endblock %}

@@ -1,27 +1,41 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="row">
-  <aside class="col-md-4">
+  <aside class="col-md-3">
     <div class="sidebar">
-        <h3 class="section">RIOS Standard</h3>
-        This free service may be used to convert research instruments to and from <a href="https://rioscore.readthedocs.org/en/latest/">RIOS</a>, the Research Instrument Open Standard.<br/>
-        <h3 class="section">RIOS Documetation</h3>
-        The implementation is based on <a href="http://pythonhosted.org/rios.conversion/">rios.conversion</a>.<br/>
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          RIOS Standard
+        </div>
+        <div class="panel-body">
+          This free service may be used to convert research instruments to and from <a href="https://rioscore.readthedocs.org/en/latest/">RIOS</a>, the Research Instrument Open Standard.<br/>
+        </div>
+      </div>
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          RIOS Documetation
+        </div>
+        <div class="panel-body">
+          The implementation is based on <a href="http://pythonhosted.org/rios.conversion/">rios.conversion</a>.<br/>
+        </div>
+      </div>
     </div>
   </aside>
-  <main class="col-md-8">
+  <main class="col-md-9">
     <div class="main">
-        <p>
-            <h1 class="section">RIOS Instrument Converter</h1>
-            This free service may be used to convert research instruments to and from <a href="https://rioscore.readthedocs.org/en/latest/">RIOS</a>, the Research Instrument Open Standard.<br/>
-            The implementation is based on <a href="http://pythonhosted.org/rios.conversion/">rios.conversion</a>.<br/>
-            <h2 class="section">API Specification</h2>
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <h4 class="section">Welcome to the RIOS Instrument Converter</h4>
+        </div>
+        <div class="panel-body">
+            This free service may be used to convert research instruments to and from <a href="https://rioscore.readthedocs.org/en/latest/">RIOS</a>, the Research Instrument Open Standard. The implementation is based on <a href="http://pythonhosted.org/rios.conversion/">rios.conversion</a>.<br/>
+            <h4 class="section">API Specification</h4>
             <a href="{{PATH_URL}}convertdoc">RIOS instrument converter API specification</a><br/>
-            <h2 class="section">Convert To RIOS</h2>
+            <h4 class="section">Convert To RIOS</h4>
             <a href="{{PATH_URL}}convert/to">Form to convert to RIOS</a><br/>
-            <h2 class="section">Convert From RIOS</h2>
+            <h4 class="section">Convert From RIOS</h4>
             <a href="{{PATH_URL}}convert/from">Form to convert from RIOS</a><br/>
-        </p>
+        </div>
     </div>
   </main>
 </div>
