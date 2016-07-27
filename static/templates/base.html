@@ -39,10 +39,10 @@
               <li {% if 'convertdoc' in PATH_URL %}class="active"{% endif %}>
                 <a href="{{ MOUNT['rios.converter'] }}/convertdoc">API Specification</a>
               </li>
-              <li {% if 'convert/to' in PATH_URL %}class="active"{% endif %}>
+              <li {% if 'convert/to' in PATH_URL and '/to/' not in PATH_URL %}class="active"{% endif %}>
                 <a href="{{ MOUNT['rios.converter'] }}/convert/to">Convert to RIOS</a>
               </li>
-              <li {% if 'convert/from' in PATH_URL %}class="active"{% endif %}>
+              <li {% if 'convert/from' in PATH_URL and '/from/' not in PATH_URL %}class="active"{% endif %}>
                 <a href="{{ MOUNT['rios.converter'] }}/convert/from">Convert from RIOS</a>
               </li>
             </ul>

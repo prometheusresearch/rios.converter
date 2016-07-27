@@ -143,6 +143,9 @@ class ConvertToRios(Command):
         'redcap': RedcapToRios,
         }
 
+    convert_fail_template = 'rios.converter:/templates/convert_fail.html'
+    form_params_fail_template = 'rios.converter:/templates/form_params_fail.html'
+
     def render(
             self,
             req,
@@ -160,11 +163,11 @@ class ConvertToRios(Command):
         tempfile.tempdir = self.settings.temp_dir
         temp_dir = tempfile.mkdtemp()
         outfile_prefix = os.path.join(temp_dir, outname)
-        errors = []
+        initialization_errors = []
         if not hasattr(infile, 'file'):
-            errors.append('Input file is required.')
+            initialization_errors.append('Input file is required.')
         if not outname:
-            errors.append('Output filename prefix is required.')
+            initialization_errors.append('Output filename prefix is required.')
         if not instrument_version:
             instrument_version = '1.0'
         args = [
@@ -173,9 +176,9 @@ class ConvertToRios(Command):
                 '--instrument-version', instrument_version, ]
         if system == 'redcap':
             if not instrument_id:
-                errors.append('Instrument ID is required.')
+                initialization_errors.append('Instrument ID is required.')
             if not instrument_title:
-                errors.append('Instrument Title is required.')
+                initialization_errors.append('Instrument Title is required.')
             args.extend([
                 '--id', 'urn:%s' % (instrument_id,),
                 '--title', instrument_title, ])
@@ -187,12 +190,15 @@ class ConvertToRios(Command):
             format = 'yaml'
         error_filename = outfile_prefix + '.stderr'
 
-        if errors:
+        if initialization_errors:
             shutil.rmtree(temp_dir)
-            return Response(json={
-                    "status": 400,
-                    "errors": errors
-                    })
+            return render_to_response(
+                self.form_params_fail_template,
+                req,
+                status=400,
+                errors=initialization_errors,
+            )
+
         crash = None
         with open(error_filename, 'wb') as stderr:
             sys.stdin = infile.file
@@ -242,12 +248,14 @@ class ConvertToRios(Command):
         else:
             shutil.rmtree(temp_dir)
             log(session, 'errors', repr(errors))
-            return Response(json={
-                    "result": str(result),
-                    "args": args,
-                    "status": 400,
-                    "errors": errors
-                    })
+            return render_to_response(
+                self.convert_fail_template,
+                req,
+                errors=errors,
+                result=str(result),
+                args=args,
+                system=system
+            )
 
 
 class ConvertFromRios(Command):
@@ -267,6 +275,9 @@ class ConvertFromRios(Command):
         'qualtrics': QualtricsFromRios,
         'redcap': RedcapFromRios,
         }
+
+    convert_fail_template = 'rios.converter:/templates/convert_fail.html'
+    form_params_fail_template = 'rios.converter:/templates/form_params_fail.html'
 
     def load_file(self, session, file_field):
         filename = os.path.join(self.temp_dir, file_field.filename)
@@ -291,9 +302,9 @@ class ConvertFromRios(Command):
         tempfile.tempdir = self.settings.temp_dir
         self.temp_dir = tempfile.mkdtemp()
         outfile = os.path.join(self.temp_dir, outname)
-        errors = []
+        initialization_errors = []
         if not outname:
-            errors.append('Output filename prefix is required.')
+            initialization_errors.append('Output filename prefix is required.')
         if not format:
             format = 'yaml'
         args = [
@@ -306,25 +317,27 @@ class ConvertFromRios(Command):
                     '--instrument',
                     '%s' % self.load_file(session, instrument_file)])
         else:
-            errors.append('An input instrument file is required.')
+            initialization_errors.append('An input instrument file is required.')
         if hasattr(form_file, 'filename'):
             args.extend([
                     '--form',
                     '%s' % self.load_file(session, form_file)])
         else:
-            errors.append('An input form file is required.')
+            initialization_errors.append('An input form file is required.')
         if hasattr(calculationset_file, 'filename'):
             args.extend([
                     '--calculationset',
                     '%s' % self.load_file(session, calculationset_file)])
         if localization:
             args.extend(['--localization', localization])
-        if errors:
+        if initialization_errors:
             shutil.rmtree(self.temp_dir)
-            return Response(json={
-                    "status": 400,
-                    "errors": errors
-                    })
+            return render_to_response(
+                self.form_params_fail_template,
+                req,
+                errors= initialization_errors,
+            )
+
         crash = None
         error_filename = outfile + '.stderr'
         with open(error_filename, 'wb') as stderr:
@@ -334,6 +347,7 @@ class ConvertFromRios(Command):
             # Stuff it into sys.stderr instead.
             sys.stderr = stderr
             try:
+                errors = []
                 result = self.converter_class[system]()(args)
             except Exception, e:
                 result = -1
@@ -369,12 +383,14 @@ class ConvertFromRios(Command):
         else:
             shutil.rmtree(self.temp_dir)
             log(session, 'errors', repr(errors))
-            return Response(json={
-                    "result": str(result),
-                    "args": args,
-                    "status": 400,
-                    "errors": errors
-                    })
+            return render_to_response(
+                self.convert_fail_template,
+                req,
+                errors=errors,
+                result=str(result),
+                args=args,
+                system=system
+            )
 
 
 class HandleNotFound(HandleError):
