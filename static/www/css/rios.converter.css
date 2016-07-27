@@ -1,7 +1,10 @@
 .footer {
-  background-color: #fff;
   bottom: 0;
   width: 100%;
   height: 70px;
   padding: 15px;
+}
+
+.footer-img {
+  max-height: 30px;
 }
