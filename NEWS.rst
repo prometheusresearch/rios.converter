@@ -15,6 +15,7 @@ Change History
 * Tooltip added for instrument ID conversion form field
 * Tooltip added for instrument title conversion form field
 * Prometheus Research logo footer added to all pages
+* Localization removed from conversion form and defaults to ``en``
 
 0.3.0 (2016-xx-xx)
 ==================

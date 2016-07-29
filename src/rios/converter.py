@@ -27,6 +27,9 @@ from rios.conversion.qualtrics.to_rios import QualtricsToRios
 from rios.conversion.qualtrics.from_rios import QualtricsFromRios
 
 
+LOCALIZATION = 'en'
+
+
 class TempDirSetting(Setting):
     """Directory with temporary data."""
     name = 'temp_dir'
@@ -130,7 +133,6 @@ class ConvertToRios(Command):
         Parameter('instrument_title', StrVal('.*')),
         Parameter('instrument_id', StrVal('([a-z0-9]{3}[a-z0-9]*)?')),
         Parameter('instrument_version', StrVal('(\d+\.\d+)?')),
-        Parameter('localization', StrVal('.*')),
         Parameter('outname', StrVal('.*')),
         Parameter('infile', AnyVal()),
         ]
@@ -152,7 +154,6 @@ class ConvertToRios(Command):
             instrument_title,
             instrument_id,
             instrument_version,
-            localization,
             outname,
             infile):
 
@@ -180,8 +181,7 @@ class ConvertToRios(Command):
             args.extend([
                 '--id', 'urn:%s' % (instrument_id,),
                 '--title', instrument_title, ])
-        if localization:
-            args.extend(['--localization', localization])
+        args.extend(['--localization', LOCALIZATION])
         if format:
             args.extend(['--format', format])
         else:
@@ -260,7 +260,6 @@ class ConvertFromRios(Command):
     parameters = [
         Parameter('system', StrVal('(qualtrics)|(redcap)'), ),
         Parameter('format', StrVal('(yaml)|(json)')),
-        Parameter('localization', StrVal('.*')),
         Parameter('instrument_file', AnyVal()),
         Parameter('form_file', AnyVal()),
         Parameter('calculationset_file', AnyVal()),
@@ -287,7 +286,6 @@ class ConvertFromRios(Command):
             req,
             system,
             format,
-            localization,
             instrument_file,
             form_file,
             calculationset_file,
@@ -326,8 +324,7 @@ class ConvertFromRios(Command):
             args.extend([
                     '--calculationset',
                     '%s' % self.load_file(session, calculationset_file)])
-        if localization:
-            args.extend(['--localization', localization])
+        args.extend(['--localization', LOCALIZATION])
         if initialization_errors:
             shutil.rmtree(self.temp_dir)
             return render_to_response(
