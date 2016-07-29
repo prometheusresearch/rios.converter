@@ -3,6 +3,19 @@ Change History
 **************
 
 
+0.4.0 (2016-07-29)
+==================
+
+* Added Twitter Bootstrap CSS styling to application
+* User friendly error reporting interface
+* User friendly interface for invalid conversion form parameters
+* Added a base.html template that all pages use for styling and asset payloads
+* Custom CSS and JS folders and code added to ``static/www/`` directory
+* Tooltip added for output filename prefix conversion form field
+* Tooltip added for instrument ID conversion form field
+* Tooltip added for instrument title conversion form field
+* Prometheus Research logo footer added to all pages
+
 0.3.0 (2016-xx-xx)
 ==================
 
