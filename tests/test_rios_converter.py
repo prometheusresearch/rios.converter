@@ -3,7 +3,11 @@ from rex.core import Rex
 from webob import Request
 
 def test_pages():
-    app = Rex('rios.converter')
+    app = Rex(
+        'rios.converter',
+        temp_dir='tests/sandbox',
+        log_dir='tests/sandbox/log_dir'
+    )
     app.on()
     print Request.blank('/').get_response(app)
     print Request.blank('/convert/to').get_response(app)
@@ -11,6 +15,7 @@ def test_pages():
 
     settings = get_settings()
     settings.temp_dir = 'tests/sandbox'
+    settings.log_dir = 'tests/sandbox/log_dir'
 
     with open('tests/redcap/format_1.csv') as input_file:
         print Request.blank('/convert/to/rios', POST={
@@ -38,7 +43,11 @@ def test_pages():
     app.off()
 
 def test_rios_to_redcap():
-    app = Rex('rios.converter')
+    app = Rex(
+        'rios.converter',
+        temp_dir='tests/sandbox',
+        log_dir='tests/sandbox/log_dir'
+    )
     app.on()
     settings = get_settings()
     settings.temp_dir = 'tests/sandbox'
@@ -61,7 +70,11 @@ def test_rios_to_redcap():
     app.off()
 
 def test_rios_to_qualtrics():
-    app = Rex('rios.converter')
+    app = Rex(
+        'rios.converter',
+        temp_dir='tests/sandbox',
+        log_dir='tests/sandbox/log_dir'
+    )
     app.on()
     settings = get_settings()
     settings.temp_dir = 'tests/sandbox'
