@@ -33,8 +33,10 @@ class TempDirSetting(Setting):
     default = None
     validate = StrVal()
 
+
 class LogDirSetting(Setting):
-    """Directory to log conversion activities to for future research/analysis"""
+    """ Directory to log conversion activities to for future research/analysis
+    """
     name = 'log_dir'
     validate = StrVal()
 
@@ -44,7 +46,7 @@ class ConverterInitialize(Initialize):
         log_dir = get_settings().log_dir
         if not os.path.isdir(log_dir):
             raise Error('Log Directory (%s) doesn\'t exist' % (log_dir,))
-        if not os.access(log_dir, os.R_OK|os.W_OK|os.X_OK):
+        if not os.access(log_dir, os.R_OK | os.W_OK | os.X_OK):
             raise Error('Log Directory (%s) not writable' % (log_dir,))
 
 
@@ -55,6 +57,7 @@ def log(session, filename, content):
     fp = open(os.path.join(log_dir, filename), 'wb')
     fp.write(content)
     fp.close()
+
 
 def log_file(session, filepath):
     log_dir = os.path.join(get_settings().log_dir, session)
@@ -138,7 +141,8 @@ class ConvertToRios(Command):
         }
 
     convert_fail_template = 'rios.converter:/templates/convert_fail.html'
-    form_params_fail_template = 'rios.converter:/templates/form_params_fail.html'
+    form_params_fail_template = \
+        'rios.converter:/templates/form_params_fail.html'
 
     def render(
             self,
@@ -268,7 +272,8 @@ class ConvertFromRios(Command):
         }
 
     convert_fail_template = 'rios.converter:/templates/convert_fail.html'
-    form_params_fail_template = 'rios.converter:/templates/form_params_fail.html'
+    form_params_fail_template = \
+        'rios.converter:/templates/form_params_fail.html'
 
     def load_file(self, session, file_field):
         filename = os.path.join(self.temp_dir, file_field.filename)
@@ -308,7 +313,9 @@ class ConvertFromRios(Command):
                     '--instrument',
                     '%s' % self.load_file(session, instrument_file)])
         else:
-            initialization_errors.append('An input instrument file is required.')
+            initialization_errors.append(
+                'An input instrument file is required.'
+            )
         if hasattr(form_file, 'filename'):
             args.extend([
                     '--form',
