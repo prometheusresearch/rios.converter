@@ -13,10 +13,6 @@ def test_pages():
     print Request.blank('/convert/to').get_response(app)
     print Request.blank('/convert/from').get_response(app)
 
-    settings = get_settings()
-    settings.temp_dir = 'tests/sandbox'
-    settings.log_dir = 'tests/sandbox/log_dir'
-
     with open('tests/redcap/format_1.csv') as input_file:
         print Request.blank('/convert/to/rios', POST={
                 'system': 'redcap', 
@@ -49,8 +45,6 @@ def test_rios_to_redcap():
         log_dir='tests/sandbox/log_dir'
     )
     app.on()
-    settings = get_settings()
-    settings.temp_dir = 'tests/sandbox'
 
     i_file = open('tests/redcap/format_1_i.yaml')
     f_file = open('tests/redcap/format_1_f.yaml')
@@ -76,8 +70,6 @@ def test_rios_to_qualtrics():
         log_dir='tests/sandbox/log_dir'
     )
     app.on()
-    settings = get_settings()
-    settings.temp_dir = 'tests/sandbox'
 
     i_file = open('tests/redcap/format_1_i.yaml')
     f_file = open('tests/redcap/format_1_f.yaml')
