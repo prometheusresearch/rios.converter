@@ -56,4 +56,3 @@ def logger_context():
 
 
 logger_main = Logger()
-
