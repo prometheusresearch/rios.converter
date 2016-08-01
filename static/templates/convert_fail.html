@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="panel panel-danger">
+  <div class="panel-heading">
+    <h4>Conversion Error</h4>
+  </div>
+  <div class="panel-body">
+    <p>Results cannot be determined due to limitations imposed by the proprietary nature of the {% if 'redcap' in system %}REDCap{% else %}Qualtrics{% endif %} software. *</p>
+    <p>This problem has been logged and support has been notified.</p>
+    <br/>
+    <p>
+      * Because {% if 'redcap' in system %}REDCap{% else %}Qualtrics{% endif %} is not open source, the codes and standards are not available for direct review and use. We’ve reconstructed the instrument standard from a representative set of publicly available test cases, but new edge cases occasionally come up. This file contains such an example; we will investigate and attempt to handle this edge case in a future release.
+    </p>
+    <br/>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Error Results
+      </div>
+      <div class="panel-body">
+        Errors:
+          <ul>
+            {% for error in errors %}
+              <li>{{ error|e }}</li>
+            {% endfor %}
+          </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -27,14 +27,19 @@ from rios.conversion.qualtrics.to_rios import QualtricsToRios
 from rios.conversion.qualtrics.from_rios import QualtricsFromRios
 
 
+LOCALIZATION = 'en'
+
+
 class TempDirSetting(Setting):
     """Directory with temporary data."""
     name = 'temp_dir'
     default = None
     validate = StrVal()
 
+
 class LogDirSetting(Setting):
-    """Directory to log conversion activities to for future research/analysis"""
+    """ Directory to log conversion activities to for future research/analysis
+    """
     name = 'log_dir'
     validate = StrVal()
 
@@ -44,7 +49,7 @@ class ConverterInitialize(Initialize):
         log_dir = get_settings().log_dir
         if not os.path.isdir(log_dir):
             raise Error('Log Directory (%s) doesn\'t exist' % (log_dir,))
-        if not os.access(log_dir, os.R_OK|os.W_OK|os.X_OK):
+        if not os.access(log_dir, os.R_OK | os.W_OK | os.X_OK):
             raise Error('Log Directory (%s) not writable' % (log_dir,))
 
 
@@ -55,6 +60,7 @@ def log(session, filename, content):
     fp = open(os.path.join(log_dir, filename), 'wb')
     fp.write(content)
     fp.close()
+
 
 def log_file(session, filepath):
     log_dir = os.path.join(get_settings().log_dir, session)
@@ -67,16 +73,10 @@ class HomeCmd(Command):
 
     path = '/'
     access = 'anybody'
-    #template = 'rios.converter:/templates/home.rst'
     template = 'rios.converter:/templates/home.html'
 
     def render(self, req):
         return render_to_response(self.template, req, status=200)
-        #response = render_to_response(self.template, req, status=200)
-        #html_output = docutils.core.publish_string(
-        #        response.body,
-        #        writer_name='html')
-        #return Response(html_output)
 
 
 class ConvertDoc(Command):
@@ -133,7 +133,6 @@ class ConvertToRios(Command):
         Parameter('instrument_title', StrVal('.*')),
         Parameter('instrument_id', StrVal('([a-z0-9]{3}[a-z0-9]*)?')),
         Parameter('instrument_version', StrVal('(\d+\.\d+)?')),
-        Parameter('localization', StrVal('.*')),
         Parameter('outname', StrVal('.*')),
         Parameter('infile', AnyVal()),
         ]
@@ -143,6 +142,10 @@ class ConvertToRios(Command):
         'redcap': RedcapToRios,
         }
 
+    convert_fail_template = 'rios.converter:/templates/convert_fail.html'
+    form_params_fail_template = \
+        'rios.converter:/templates/form_params_fail.html'
+
     def render(
             self,
             req,
@@ -151,7 +154,6 @@ class ConvertToRios(Command):
             instrument_title,
             instrument_id,
             instrument_version,
-            localization,
             outname,
             infile):
 
@@ -160,11 +162,11 @@ class ConvertToRios(Command):
         tempfile.tempdir = self.settings.temp_dir
         temp_dir = tempfile.mkdtemp()
         outfile_prefix = os.path.join(temp_dir, outname)
-        errors = []
+        initialization_errors = []
         if not hasattr(infile, 'file'):
-            errors.append('Input file is required.')
+            initialization_errors.append('Input file is required.')
         if not outname:
-            errors.append('Output filename prefix is required.')
+            initialization_errors.append('Output filename prefix is required.')
         if not instrument_version:
             instrument_version = '1.0'
         args = [
@@ -173,26 +175,27 @@ class ConvertToRios(Command):
                 '--instrument-version', instrument_version, ]
         if system == 'redcap':
             if not instrument_id:
-                errors.append('Instrument ID is required.')
+                initialization_errors.append('Instrument ID is required.')
             if not instrument_title:
-                errors.append('Instrument Title is required.')
+                initialization_errors.append('Instrument Title is required.')
             args.extend([
                 '--id', 'urn:%s' % (instrument_id,),
                 '--title', instrument_title, ])
-        if localization:
-            args.extend(['--localization', localization])
+        args.extend(['--localization', LOCALIZATION])
         if format:
             args.extend(['--format', format])
         else:
             format = 'yaml'
         error_filename = outfile_prefix + '.stderr'
 
-        if errors:
+        if initialization_errors:
             shutil.rmtree(temp_dir)
-            return Response(json={
-                    "status": 400,
-                    "errors": errors
-                    })
+            return render_to_response(
+                self.form_params_fail_template,
+                req,
+                errors=initialization_errors,
+            )
+
         crash = None
         with open(error_filename, 'wb') as stderr:
             sys.stdin = infile.file
@@ -242,12 +245,12 @@ class ConvertToRios(Command):
         else:
             shutil.rmtree(temp_dir)
             log(session, 'errors', repr(errors))
-            return Response(json={
-                    "result": str(result),
-                    "args": args,
-                    "status": 400,
-                    "errors": errors
-                    })
+            return render_to_response(
+                self.convert_fail_template,
+                req,
+                errors=errors,
+                system=system
+            )
 
 
 class ConvertFromRios(Command):
@@ -257,7 +260,6 @@ class ConvertFromRios(Command):
     parameters = [
         Parameter('system', StrVal('(qualtrics)|(redcap)'), ),
         Parameter('format', StrVal('(yaml)|(json)')),
-        Parameter('localization', StrVal('.*')),
         Parameter('instrument_file', AnyVal()),
         Parameter('form_file', AnyVal()),
         Parameter('calculationset_file', AnyVal()),
@@ -267,6 +269,10 @@ class ConvertFromRios(Command):
         'qualtrics': QualtricsFromRios,
         'redcap': RedcapFromRios,
         }
+
+    convert_fail_template = 'rios.converter:/templates/convert_fail.html'
+    form_params_fail_template = \
+        'rios.converter:/templates/form_params_fail.html'
 
     def load_file(self, session, file_field):
         filename = os.path.join(self.temp_dir, file_field.filename)
@@ -280,7 +286,6 @@ class ConvertFromRios(Command):
             req,
             system,
             format,
-            localization,
             instrument_file,
             form_file,
             calculationset_file,
@@ -291,9 +296,9 @@ class ConvertFromRios(Command):
         tempfile.tempdir = self.settings.temp_dir
         self.temp_dir = tempfile.mkdtemp()
         outfile = os.path.join(self.temp_dir, outname)
-        errors = []
+        initialization_errors = []
         if not outname:
-            errors.append('Output filename prefix is required.')
+            initialization_errors.append('Output filename prefix is required.')
         if not format:
             format = 'yaml'
         args = [
@@ -306,25 +311,28 @@ class ConvertFromRios(Command):
                     '--instrument',
                     '%s' % self.load_file(session, instrument_file)])
         else:
-            errors.append('An input instrument file is required.')
+            initialization_errors.append(
+                'An input instrument file is required.'
+            )
         if hasattr(form_file, 'filename'):
             args.extend([
                     '--form',
                     '%s' % self.load_file(session, form_file)])
         else:
-            errors.append('An input form file is required.')
+            initialization_errors.append('An input form file is required.')
         if hasattr(calculationset_file, 'filename'):
             args.extend([
                     '--calculationset',
                     '%s' % self.load_file(session, calculationset_file)])
-        if localization:
-            args.extend(['--localization', localization])
-        if errors:
+        args.extend(['--localization', LOCALIZATION])
+        if initialization_errors:
             shutil.rmtree(self.temp_dir)
-            return Response(json={
-                    "status": 400,
-                    "errors": errors
-                    })
+            return render_to_response(
+                self.form_params_fail_template,
+                req,
+                errors=initialization_errors,
+            )
+
         crash = None
         error_filename = outfile + '.stderr'
         with open(error_filename, 'wb') as stderr:
@@ -334,6 +342,7 @@ class ConvertFromRios(Command):
             # Stuff it into sys.stderr instead.
             sys.stderr = stderr
             try:
+                errors = []
                 result = self.converter_class[system]()(args)
             except Exception, e:
                 result = -1
@@ -369,12 +378,12 @@ class ConvertFromRios(Command):
         else:
             shutil.rmtree(self.temp_dir)
             log(session, 'errors', repr(errors))
-            return Response(json={
-                    "result": str(result),
-                    "args": args,
-                    "status": 400,
-                    "errors": errors
-                    })
+            return render_to_response(
+                self.convert_fail_template,
+                req,
+                errors=errors,
+                system=system
+            )
 
 
 class HandleNotFound(HandleError):

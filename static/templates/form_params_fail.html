@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="panel panel-warning">
+  <div class="panel-heading">
+    <h4>Parameters Error</h4>
+  </div>
+  <div class="panel-body">
+    <p>Missing required input fields:</p>
+    <ul>
+      {% for error in errors %}
+        <li>{{ error|e }}</li>
+      {% endfor %}
+    </ul>
+    <p>Please go back and fix the issues listed above.</p>
+  </div>
+</div>
+{% endblock %}
+

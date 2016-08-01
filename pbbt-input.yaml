@@ -13,5 +13,7 @@ tests:
   - rmdir: ./tests/sandbox
   - mkdir: ./tests/sandbox
 
+  - mkdir: ./tests/sandbox/log_dir
+
   - sh: nosetests --quiet
     ignore: true
