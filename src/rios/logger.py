@@ -54,5 +54,6 @@ def logger_context():
     yield logging_instance
     logging_instance.clear()
 
+
 logger_main = Logger()
 
