@@ -4,7 +4,6 @@
 
 
 import cgi
-import collections
 
 
 from rex.core import Validate, Error, guard
@@ -32,7 +31,6 @@ class FileAttachmentVal(Validate):
     """
 
     loader = NotImplemented
-    Attachment = collections.namedtuple('Attachment', 'name content')
 
     def __call__(self, data):
         if (isinstance(data, cgi.FieldStorage) and
