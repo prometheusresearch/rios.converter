@@ -168,10 +168,9 @@ class ConvertToRios(Command):
             infile):
 
         # Validate file
-        with validate(infile, system) as validated_file:
-            infile = validated_file.file
-            if hasattr(infile, 'seek'):
-                infile.seek(0)
+        infile = validate(infile, system)
+        if hasattr(infile, 'seek'):
+            infile.seek(0)
 
         session = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
         self.settings = get_settings()

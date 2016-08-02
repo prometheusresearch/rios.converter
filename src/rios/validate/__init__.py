@@ -6,7 +6,6 @@
 __import__('pkg_resources').declare_namespace(__name__)
 
 
-import contextlib
 import six
 
 
@@ -18,7 +17,6 @@ SYSTEM_TYPES = {
 }
 
 
-@contextlib.contextmanager
 def validate(infile, system):
     """
     Context manager for validating REDCap and Qualtrics files.
@@ -29,9 +27,8 @@ def validate(infile, system):
     :type system: string
     :raises Error: If system parameter is malformed
     """
-    if isinstance(system, six.string_types) and system in SYSTEM_TYPES:
-        yield SYSTEM_TYPES[system](infile)
-    else:
+    if not isinstance(system, six.string_types) and system not in SYSTEM_TYPES:
         error = Error('Expected valid system types')
         error.wrap('Got:', repr(system))
         raise error
+    return SYSTEM_TYPES[system](infile)
