@@ -25,8 +25,8 @@ class FileAttachmentVal(Validate):
     """
     Abstract base class for an HTML form field containing an uploaded file.
 
-    Implementations must override `loader`, `system`, `content_type` and
-    `validate`.
+    Implementations must override `loader`, `system`, and `content_type`
+    values along with overriding the `validate` function.
 
     `loader`
         A function that loads a file into a buffer for processing. Depends on
@@ -40,8 +40,8 @@ class FileAttachmentVal(Validate):
         List of arguments to pass to file open function.
     `system`
         A string that defines the corresponding system belonging to the file.
-        Used for building SYSTEM_TYPES dictionary for validation context
-        manager (see :function:`rios.validate.validate`).
+        Used for automatically building SYSTEM_TYPES dictionary for validation
+        function (see :function:`rios.validate.validate`).
     `content_type`
         A string containing the type of content expected in the file. Compared
         to content type string produced by `python-magic` library for proper
@@ -115,7 +115,8 @@ class FileAttachmentVal(Validate):
         """
         Handles specific system-type validation.
 
-        Implementations must override this method.
+        Implementations must override this method and raise a
+        :class:`rex.core.error.Error` error instance if validation fails.
         """
         raise NotImplementedError("%s.render()" % self.__class__.__name__)
 
