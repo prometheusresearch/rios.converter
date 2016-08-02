@@ -1,6 +1,18 @@
+#
+# Copyright (c) 2016, Prometheus Research, LLC
+#
+
+
 import tempfile
 import traceback
 import datetime
+import docutils.core
+import glob
+import os
+import shutil
+import sys
+import zipfile
+
 
 from rex.core import get_packages
 from rex.core import get_settings
@@ -15,19 +27,17 @@ from rex.web import HandleLocation
 from rex.web import Parameter
 from rex.web import render_to_response
 from webob import Response
-import docutils.core
-import glob
-import os
-import shutil
-import sys
-import zipfile
 from rios.conversion.redcap.to_rios import RedcapToRios
 from rios.conversion.redcap.from_rios import RedcapFromRios
 from rios.conversion.qualtrics.to_rios import QualtricsToRios
 from rios.conversion.qualtrics.from_rios import QualtricsFromRios
 
 
+from validate import RedcapFileAttachmentVal
+
+
 LOCALIZATION = 'en'
+INSTRUMENT_VERSION = 1.0
 
 
 class TempDirSetting(Setting):
@@ -134,7 +144,7 @@ class ConvertToRios(Command):
         Parameter('instrument_id', StrVal('([a-z0-9]{3}[a-z0-9]*)?')),
         Parameter('instrument_version', StrVal('(\d+\.\d+)?')),
         Parameter('outname', StrVal('.*')),
-        Parameter('infile', AnyVal()),
+        Parameter('infile', RedcapFileAttachmentVal()),
         ]
 
     converter_class = {
