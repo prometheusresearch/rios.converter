@@ -166,34 +166,33 @@ class RedcapFileAttachmentVal(FileAttachmentVal):
     COLUMNS = REQUIRED_COLUMNS + OPTIONAL_COLUMNS
 
     def validate(self, attachment):
-        with guard('REDCap validation error'):
-            header = attachment.next()
-            # Make sure all column headers are valid
-            if not all(value in self.COLUMNS for value in header):
-                error = Error('Unexpected column headers(s)')
-                error.wrap('Expected column headers:', ", ".join(self.COLUMNS))
-                error.wrap('Got:', ", ".join(header))
-                raise error
-            if not all(value in header for value in self.REQUIRED_COLUMNS):
-                error = Error('Missing required column header(s)')
-                error.wrap('Expected required column headers:',
-                    ", ".join(self.REQUIRED_COLUMNS))
-                error.wrap('Got', ", ".join(header))
-                raise error
-            # Check Field Type row for unexpected values
-            column_values = {}
-            for h_value in header:
-                column_values[h_value] = []
-            for row in attachment:
-                for h_value, value in zip(header, row):
-                    column_values[h_value].append(value)
-            if not all(value in self.FIELD_TYPES
-                for value in column_values['Field Type']):
-                error = Error('Unexpected Fiel Type value')
-                error.wrap('Expected Field Type values:',
-                    ", ".join(self.FIELD_TYPES))
-                error.wrap('Got:', column_values['Field Type'])
-                raise error
+        header = attachment.next()
+        # Make sure all column headers are valid
+        if not all(value in self.COLUMNS for value in header):
+            error = Error('Unexpected column headers(s)')
+            error.wrap('Expected column headers:', ", ".join(self.COLUMNS))
+            error.wrap('Got:', ", ".join(header))
+            raise error
+        if not all(value in header for value in self.REQUIRED_COLUMNS):
+            error = Error('Missing required column header(s)')
+            error.wrap('Expected required column headers:',
+                ", ".join(self.REQUIRED_COLUMNS))
+            error.wrap('Got', ", ".join(header))
+            raise error
+        # Check Field Type row for unexpected values
+        column_values = {}
+        for h_value in header:
+            column_values[h_value] = []
+        for row in attachment:
+            for h_value, value in zip(header, row):
+                column_values[h_value].append(value)
+        if not all(value in self.FIELD_TYPES
+            for value in column_values['Field Type']):
+            error = Error('Unexpected Fiel Type value')
+            error.wrap('Expected Field Type values:',
+                ", ".join(self.FIELD_TYPES))
+            error.wrap('Got:', column_values['Field Type'])
+            raise error
 
 
 class QualtricsFileAttachmentVal(FileAttachmentVal):

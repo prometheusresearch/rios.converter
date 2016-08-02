@@ -171,7 +171,7 @@ class ConvertToRios(Command):
         try:
             infile = validate(infile, system).file
         except Error as exc:
-            req.get_response(exc)
+            return req.get_response(exc)
 
         session = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
         self.settings = get_settings()
