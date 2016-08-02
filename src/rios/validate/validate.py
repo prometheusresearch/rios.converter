@@ -118,7 +118,7 @@ class FileAttachmentVal(Validate):
         Implementations must override this method and raise a
         :class:`rex.core.error.Error` error instance if validation fails.
         """
-        raise NotImplementedError("%s.render()" % self.__class__.__name__)
+        raise NotImplementedError("%s.validate()" % self.__class__.__name__)
 
 
 class RedcapFileAttachmentVal(FileAttachmentVal):
