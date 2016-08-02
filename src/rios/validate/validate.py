@@ -19,8 +19,7 @@ class FileAttachmentVal(Validate):
     """
     Abstract base class for an HTML form field containing an uploaded file.
 
-    Produces a pair: the file name and an open file object. Based on
-    ``rex.attach`` package.
+    Based on ``rex.attach`` package's ``AttachmentVal`` class.
     """
 
     loader = NotImplemented
@@ -28,7 +27,6 @@ class FileAttachmentVal(Validate):
     def __call__(self, data):
         if (isinstance(data, cgi.FieldStorage) and
                 data.filename is not None and data.file is not None):
-            # Validate file
             with guard('While processing file', str(data.filename)):
                 self.validate(self._load(data.file))
             return data
@@ -38,7 +36,7 @@ class FileAttachmentVal(Validate):
 
     def _load(self, attachment):
         try:
-            return self.load(attachment)
+            return self.loader(attachment)
         except Exception as exc:
             error = Error('Error opening file for validation')
             error.wrap('Got:', repr(exc))
