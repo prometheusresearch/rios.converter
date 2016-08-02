@@ -142,7 +142,6 @@ class ConvertToRios(Command):
         Parameter('format', StrVal('(yaml)|(json)')),
         Parameter('instrument_title', StrVal('.*')),
         Parameter('instrument_id', StrVal('([a-z0-9]{3}[a-z0-9]*)?')),
-        Parameter('instrument_version', StrVal('(\d+\.\d+)?')), # TODO: Remove
         Parameter('outname', StrVal('.*')),
         Parameter('infile', AnyVal()),
         ]
@@ -163,7 +162,6 @@ class ConvertToRios(Command):
             format,
             instrument_title,
             instrument_id,
-            instrument_version, # TODO: Remove
             outname,
             infile):
 
