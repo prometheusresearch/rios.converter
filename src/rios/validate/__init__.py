@@ -27,8 +27,15 @@ def validate(infile, system):
     :type system: string
     :raises Error: If system parameter is malformed
     """
+    print "++++"
+    print infile
+    print "++++"
     if not isinstance(system, six.string_types) and system not in SYSTEM_TYPES:
         error = Error('Expected valid system types')
         error.wrap('Got:', repr(system))
         raise error
-    return SYSTEM_TYPES[system](infile)
+    stuff = SYSTEM_TYPES[system](infile)
+    print "++++"
+    print stuff
+    print "++++"
+    return stuff

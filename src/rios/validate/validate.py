@@ -8,6 +8,7 @@ import csv
 import json
 import re
 import six
+import cStringIO
 import magic
 
 
@@ -33,6 +34,10 @@ class FileAttachmentVal(Validate):
         ``csv.reader`` as the loader function.
     `loader_args`
         List of arguments to pass to loader function.
+    `loader_kwargs`
+        Dict of named arguments to pass to loader function.
+    `open_args`
+        List of arguments to pass to file open function.
     `system`
         A string that defines the corresponding system belonging to the file.
         Used for building SYSTEM_TYPES dictionary for validation context
@@ -50,7 +55,8 @@ class FileAttachmentVal(Validate):
     """
 
     loader = NotImplemented
-    loader_args = None
+    loader_args = []
+    loader_kwargs = {}
     open_args = None
     system = NotImplemented
     content_type = NotImplemented
@@ -58,8 +64,10 @@ class FileAttachmentVal(Validate):
     def __call__(self, data):
         if (isinstance(data, cgi.FieldStorage) and
                 data.filename is not None and data.file is not None):
+            # Copy input file to avoid seek function calls
+            file_copy = cStringIO.StringIO(data.file.getvalue())
             with guard('While processing file', str(data.filename)):
-                self.validate(self._load(self._content_type(data.file)))
+                self.validate(self._load(self._content_type(file_copy)))
             return data
         error = Error("Expected an uploaded file")
         error.wrap("Got:", repr(data))
@@ -90,12 +98,14 @@ class FileAttachmentVal(Validate):
         :raises Error: If `loader` throws and exception
         """
         try:
-            opened_file = (
-                open(attachment, *self.open_args)
-                    if isinstance(attachment, six.string_types)
-                    else attachment
+            return self.loader(
+                (open(attachment, *self.open_args)
+                        if isinstance(attachment, six.string_types)
+                        else attachment
+                ),
+                *self.loader_args,
+                **self.loader_kwargs
             )
-            return self.loader(opened_file)
         except Exception as exc:
             error = Error('Error opening file for validation')
             error.wrap('Got:', repr(exc))
@@ -130,60 +140,59 @@ class RedcapFileAttachmentVal(FileAttachmentVal):
         'truefalse',
         'yesno',
     ]
-    REQUIRED = True
-    OPTIONAL = False
-    class Column(object):
-        """ Column class for validation. """
-        def __init__(self, required, types=None)
-            self.required = required
-            self.types = types
-        def __call__(self, value=None):
-            
-    COLUMNS = {
-        "Variable / Field Name":
-            [REQUIRED,],
-        "Form Name":
-            [REQUIRED,],
-        "Section Header":
-            [OPTIONAL,],
-        "Field Type":
-            [REQUIRED, FIELD_TYPES,],
-        "Field Label":
-            [REQUIRED,],
-        "Choices, Calculations, OR Slider Labels":
-            [REQUIRED,],
-        "Field Note":
-            [OPTIONAL,],
-        "Text Validation Type OR Show Slider Number":
-            [OPTIONAL,],
-        "Text Validation Min":
-            [OPTIONAL,],
-        "Text Validation Max":
-            [OPTIONAL,],
-        "Identifier?":
-            [OPTIONAL,],
-        "Branching Logic (Show field only if...)":
-            [OPTIONAL,],
-        "Required Field?":
-            [OPTIONAL,],
-        "Custom Alignment":
-            [OPTIONAL,],
-        "Question Number (surveys only)":
-            [OPTIONAL,],
-        "Matrix Group Name":
-            [OPTIONAL,],
-        "Matrix Ranking?":
-            [OPTIONAL,],
-        "Field Annotation":
-            [OPTIONAL,],
-    }
+    REQUIRED_COLUMNS = [
+        "Variable / Field Name",
+        "Form Name",
+        "Field Type",
+        "Field Label",
+        "Choices, Calculations, OR Slider Labels",
+    ]
+    OPTIONAL_COLUMNS = [
+        "Section Header",
+        "Field Note",
+        "Text Validation Type OR Show Slider Number",
+        "Text Validation Min",
+        "Text Validation Max",
+        "Identifier?",
+        "Branching Logic (Show field only if...)",
+        "Required Field?",
+        "Custom Alignment",
+        "Question Number (surveys only)",
+        "Matrix Group Name",
+        "Matrix Ranking?",
+        "Field Annotation",
+    ]
+    COLUMNS = REQUIRED_COLUMNS + OPTIONAL_COLUMNS
 
     def validate(self, attachment):
-        try:
+        with guard('REDCap validation error'):
             header = attachment.next()
-        except Exception as exc:
-            print "HELLO!!!", repr(exc)
-        return None
+            # Make sure all column headers are valid
+            if not all(value in self.COLUMNS for value in header):
+                error = Error('Unexpected column headers(s)')
+                error.wrap('Expected column headers:', ", ".join(self.COLUMNS))
+                error.wrap('Got:', ", ".join(header))
+                raise error
+            if not all(value in header for value in self.REQUIRED_COLUMNS):
+                error = Error('Missing required column header(s)')
+                error.wrap('Expected required column headers:',
+                    ", ".join(self.REQUIRED_COLUMNS))
+                error.wrap('Got', ", ".join(header))
+                raise error
+            # Check Field Type row for unexpected values
+            column_values = {}
+            for h_value in header:
+                column_values[h_value] = []
+            for row in attachment:
+                for h_value, value in zip(header, row):
+                    column_values[h_value].append(value)
+            if not all(value in self.FIELD_TYPES
+                for value in column_values['Field Type']):
+                error = Error('Unexpected Fiel Type value')
+                error.wrap('Expected Field Type values:',
+                    ", ".join(self.FIELD_TYPES))
+                error.wrap('Got:', column_values['Field Type'])
+                raise error
 
 
 class QualtricsFileAttachmentVal(FileAttachmentVal):

@@ -168,9 +168,7 @@ class ConvertToRios(Command):
             infile):
 
         # Validate file
-        infile = validate(infile, system)
-        if hasattr(infile, 'seek'):
-            infile.seek(0)
+        infile = validate(infile, system).file
 
         session = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
         self.settings = get_settings()
@@ -229,8 +227,14 @@ class ConvertToRios(Command):
                 errors.append(err.read())
 
         log(session, '%s_to_rios' % (system,), '')
-        infile.seek(0)
-        log(session, 'infile', infile.read())
+        # TODO: Fix this seek statement (added hasattr() to make work temporarily)
+        if hasattr(infile, 'seek'):
+            infile.seek(0)
+        # TODO: Fix this statement (added hasattr() to make work temporarily)
+        if hasattr(infile, 'read'):
+            log(session, 'infile', infile.read())
+        else:
+            log(session, 'infile', infile)
         log(session, 'args', repr(args))
         if crash:
             log(session, 'crash', crash)
