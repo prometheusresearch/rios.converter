@@ -3,40 +3,73 @@
 #
 
 
+import cgi
+import collections
+
+
+from rex.core import Validate, Error, guard
+
+
 __all__ = (
     'RedcapFileValidate',
     'QualtricsFileValidate',
 )
 
 
-class FileValidate(object):
-    """ Abstract base class for file validation. """
-
-    def __init__(self, _file):
-        if not hasattr(_file, 'read') and hasattr(_file, 'seek'):
-            raise TypeError('Initialization requires a file-like object')
-
-    def validate(self):
-        raise NotImplementedError
+def _check_incoming_file(_file):
+    """ Checks incomming file objects for ``read`` and ``seek`` attributes. """
+    if not hasattr(_file, 'read') and not hasattr(_file, 'seek'):
+        raise TypeError('Initialization requires a file-like object')
+    return _file
 
 
-class RedcapFileValidate(object):
+class FileAttachmentVal(Validate):
+    """
+    Abstract base class for an HTML form field containing an uploaded file.
+
+    Produces a pair: the file name and an open file object. Based on
+    ``rex.attach`` package.
+    """
+
+    loader = NotImplemented
+    Attachment = collections.namedtuple('Attachment', 'name content')
+
+    def __call__(self, data):
+        if (isinstance(data, cgi.FieldStorage) and
+                data.filename is not None and data.file is not None):
+            # Validate file
+            with guard('While processing file', str(data.filename)):
+                self.validate(self._load(data.file))
+            return data
+        error = Error("Expected an uploaded file")
+        error.wrap("Got:", repr(data))
+        raise error
+
+    def _load(self, attachment):
+        try:
+            return self.load(attachment)
+        except Exception as exc:
+            error = Error('Error opening file for validation')
+            error.wrap('Got:', repr(exc))
+            raise error
+
+    def validate(self, attachment):
+        raise NotImplementedError("%s.render()" % self.__class__.__name__)
+
+
+class RedcapFileAttachmentVal(FileAttachmentVal):
     """ Validation mechanism for REDCap files. """
 
-    def __init__(self, csv_file):
-        super(RedcapFileValidate, self).__init__(csv_file)
-        self.csv_file = csv_file
+    loader = csv.reader
 
-    def validate(self):
-        return True
+    def validate(self, attachment):
+        pass
 
 
-class QualtricsFileValidate(object):
+class QualtricsFileAttachmentVal(FileAttachmentVal):
     """ Validation mechanism for Qualtrics files. """
 
-    def __init__(self, qsf_file):
-        super(QualtricsFileValidate, self).__init__(qsf_file)
-        self.qsf_file = qsf_file
+    loader = json.load
 
-    def validate(self):
-        return True
+    def validate(self, attachment):
+        pass
