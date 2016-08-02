@@ -21,6 +21,7 @@ setup(
     install_requires=[
         'rex.web >=3.5, <4',
         'rios.conversion >=0.2, <1',
+        'python-magic == 0.4.12',
     ],
     extras_require={
         'dev': [

@@ -37,7 +37,7 @@ from validate import validate
 
 
 LOCALIZATION = 'en'
-INSTRUMENT_VERSION = 1.0
+INSTRUMENT_VERSION = '1.0'
 
 
 class TempDirSetting(Setting):
@@ -142,7 +142,7 @@ class ConvertToRios(Command):
         Parameter('format', StrVal('(yaml)|(json)')),
         Parameter('instrument_title', StrVal('.*')),
         Parameter('instrument_id', StrVal('([a-z0-9]{3}[a-z0-9]*)?')),
-        Parameter('instrument_version', StrVal('(\d+\.\d+)?')),
+        Parameter('instrument_version', StrVal('(\d+\.\d+)?')), # TODO: Remove
         Parameter('outname', StrVal('.*')),
         Parameter('infile', AnyVal()),
         ]
@@ -163,7 +163,7 @@ class ConvertToRios(Command):
             format,
             instrument_title,
             instrument_id,
-            instrument_version,
+            instrument_version, # TODO: Remove
             outname,
             infile):
 
@@ -181,12 +181,10 @@ class ConvertToRios(Command):
         initialization_errors = []
         if not outname:
             initialization_errors.append('Output filename prefix is required.')
-        if not instrument_version:
-            instrument_version = '1.0'
         args = [
                 '--infile', '-',  # stdin
                 '--outfile-prefix', outfile_prefix,
-                '--instrument-version', instrument_version, ]
+                '--instrument-version', INSTRUMENT_VERSION, ]
         if system == 'redcap':
             if not instrument_id:
                 initialization_errors.append('Instrument ID is required.')

@@ -6,6 +6,7 @@
 import cgi
 import csv
 import json
+import magic
 
 
 from rex.core import Validate, Error, guard
@@ -41,16 +42,34 @@ class FileAttachmentVal(Validate):
 
     loader = NotImplemented
     system = NotImplemented
+    content_type = NotImplemented
 
     def __call__(self, data):
         if (isinstance(data, cgi.FieldStorage) and
                 data.filename is not None and data.file is not None):
             with guard('While processing file', str(data.filename)):
-                self.validate(self._load(data.file))
+                self.validate(self._load(self._content_type(data.file)))
             return data
         error = Error("Expected an uploaded file")
         error.wrap("Got:", repr(data))
         raise error
+
+    def _content_type(self, attachment):
+        """
+        Checks if attachment is of the appropriate content type
+
+        :raises Error: If content type doesn't match
+        """
+        file_type = magic.from_buffer(
+            attachment.read(1024) if hasattr(attachment, 'read')
+                else attachment
+        )
+        if self.content_type not in file_type:
+            error = Error('Incorrect file type')
+            error.wrap('Got:', str(file_type))
+            raise Error
+        return attachment
+            
 
     def _load(self, attachment):
         """
@@ -79,6 +98,7 @@ class RedcapFileAttachmentVal(FileAttachmentVal):
 
     loader = csv.reader
     system = 'redcap'
+    content_type = 'ASCII text'
 
     def validate(self, attachment):
         pass
@@ -89,6 +109,7 @@ class QualtricsFileAttachmentVal(FileAttachmentVal):
 
     loader = json.load
     system = 'qualtrics'
+    content_type = 'ASCII text'
 
     def validate(self, attachment):
         pass
