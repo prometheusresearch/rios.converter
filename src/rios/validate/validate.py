@@ -21,7 +21,22 @@ class FileAttachmentVal(Validate):
     """
     Abstract base class for an HTML form field containing an uploaded file.
 
-    Based on ``rex.attach`` package's ``AttachmentVal`` class.
+    Implementations must override `loader`, `system`, and `validate`.
+
+    `loader`
+        A function that loads a file into a buffer for processing. Depends on
+        the file type to validate. For example, CSV files will typically use
+        ``csv.reader`` as the loader function.
+    `system`
+        A string that defines the corresponding system belonging to the file.
+        Used for building SYSTEM_TYPES dictionary for validation context
+        manager (see :function:`rios.validate.validate`).
+    `validate`
+        A function that performs the validation on the file buffer. This
+        function must throw an :class:`rex.core.Error` instance if validation
+        fails. This function should not return anything.
+
+    Based on :class:`rex.attach.AttachmentVal`.
     """
 
     loader = NotImplemented
@@ -38,6 +53,11 @@ class FileAttachmentVal(Validate):
         raise error
 
     def _load(self, attachment):
+        """
+        Runs `loader` on file attachment object.
+
+        :raises Error: If `loader` throws and exception
+        """
         try:
             return self.loader(attachment)
         except Exception as exc:
@@ -46,6 +66,11 @@ class FileAttachmentVal(Validate):
             raise error
 
     def validate(self, attachment):
+        """
+        Handles specific system-type validation.
+
+        Implementations must override this method.
+        """
         raise NotImplementedError("%s.render()" % self.__class__.__name__)
 
 
