@@ -15,13 +15,6 @@ __all__ = (
 )
 
 
-def _check_incoming_file(_file):
-    """ Checks incomming file objects for ``read`` and ``seek`` attributes. """
-    if not hasattr(_file, 'read') and not hasattr(_file, 'seek'):
-        raise TypeError('Initialization requires a file-like object')
-    return _file
-
-
 class FileAttachmentVal(Validate):
     """
     Abstract base class for an HTML form field containing an uploaded file.
