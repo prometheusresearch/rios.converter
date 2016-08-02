@@ -3,7 +3,7 @@ Change History
 **************
 
 
-0.4.0 (2016-07-29)
+0.4.0 (2016-xx-xx)
 ==================
 
 * Added Twitter Bootstrap CSS styling to application
@@ -16,8 +16,9 @@ Change History
 * Tooltip added for instrument title conversion form field
 * Prometheus Research logo footer added to all pages
 * Localization removed from conversion form and defaults to ``en``
+* Added logging feature to log warnings and/or errors
 
-0.3.0 (2016-xx-xx)
+0.3.0 (2016-07-21)
 ==================
 
 * Added logging to the conversion mechanism so that analysis can occur on
