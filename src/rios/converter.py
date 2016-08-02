@@ -33,7 +33,7 @@ from rios.conversion.qualtrics.to_rios import QualtricsToRios
 from rios.conversion.qualtrics.from_rios import QualtricsFromRios
 
 
-from validate import RedcapFileAttachmentVal
+from validate import validate
 
 
 LOCALIZATION = 'en'
@@ -144,7 +144,7 @@ class ConvertToRios(Command):
         Parameter('instrument_id', StrVal('([a-z0-9]{3}[a-z0-9]*)?')),
         Parameter('instrument_version', StrVal('(\d+\.\d+)?')),
         Parameter('outname', StrVal('.*')),
-        Parameter('infile', RedcapFileAttachmentVal()),
+        Parameter('infile', AnyVal()),
         ]
 
     converter_class = {
@@ -167,14 +167,18 @@ class ConvertToRios(Command):
             outname,
             infile):
 
+        # Validate file
+        with validate(infile, system) as validated_file:
+            infile = validated_file.file
+            if hasattr(infile, 'seek'):
+                infile.seek(0)
+
         session = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
         self.settings = get_settings()
         tempfile.tempdir = self.settings.temp_dir
         temp_dir = tempfile.mkdtemp()
         outfile_prefix = os.path.join(temp_dir, outname)
         initialization_errors = []
-        if not hasattr(infile, 'file'):
-            initialization_errors.append('Input file is required.')
         if not outname:
             initialization_errors.append('Output filename prefix is required.')
         if not instrument_version:
@@ -208,7 +212,7 @@ class ConvertToRios(Command):
 
         crash = None
         with open(error_filename, 'wb') as stderr:
-            sys.stdin = infile.file
+            sys.stdin = infile
             # I can't explain why I am
             # unable to pass stderr as argument:
             #    result = self.to_class()(args, None, stderr)
@@ -228,8 +232,8 @@ class ConvertToRios(Command):
                 errors.append(err.read())
 
         log(session, '%s_to_rios' % (system,), '')
-        infile.file.seek(0)
-        log(session, 'infile', infile.file.read())
+        infile.seek(0)
+        log(session, 'infile', infile.read())
         log(session, 'args', repr(args))
         if crash:
             log(session, 'crash', crash)

@@ -25,6 +25,7 @@ class FileAttachmentVal(Validate):
     """
 
     loader = NotImplemented
+    system = NotImplemented
 
     def __call__(self, data):
         if (isinstance(data, cgi.FieldStorage) and
@@ -52,6 +53,7 @@ class RedcapFileAttachmentVal(FileAttachmentVal):
     """ Validation mechanism for REDCap files. """
 
     loader = csv.reader
+    system = 'redcap'
 
     def validate(self, attachment):
         pass
@@ -61,6 +63,7 @@ class QualtricsFileAttachmentVal(FileAttachmentVal):
     """ Validation mechanism for Qualtrics files. """
 
     loader = json.load
+    system = 'qualtrics'
 
     def validate(self, attachment):
         pass
