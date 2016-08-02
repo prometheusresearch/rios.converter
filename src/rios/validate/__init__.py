@@ -19,21 +19,18 @@ SYSTEM_TYPES = {
 
 
 @contextlib.contextmanager
-def validate(file_obj, system):
+def validate(infile, system):
     """
     Context manager for validating REDCap and Qualtrics files.
 
-    :param file_obj: An instrument file to validate
-    :type file_obj: File-like object with ``read`` and ``seek`` attributes
+    :param infile: An attachment payload to validate
+    :type infile: cgi.Fieldstorage object
     :param system: Type of instrument file to validate
-    :type system: String
-    :raises TypeError: If either input fails to meet specifications
-    :returns: Validated instrument file
-    :rtype: string
+    :type system: string
+    :raises Error: If system parameter is malformed
     """
     if isinstance(system, six.string_types) and system in SYSTEM_TYPES:
-        yield SYSTEM_TYPES[system](file_obj)
-        #file_obj.seek(0)
+        yield SYSTEM_TYPES[system](infile)
     else:
         error = Error('Expected valid system types')
         error.wrap('Got:', repr(system))
