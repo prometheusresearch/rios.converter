@@ -168,6 +168,7 @@ class ConvertToRios(Command):
         # Validate file
         try:
             infile = validate(infile, system).file
+            infile.seek(0)
         except Error as exc:
             return req.get_response(exc)
 
@@ -228,14 +229,8 @@ class ConvertToRios(Command):
                 errors.append(err.read())
 
         log(session, '%s_to_rios' % (system,), '')
-        # TODO: Fix this seek statement (added hasattr() to make work temporarily)
-        if hasattr(infile, 'seek'):
-            infile.seek(0)
-        # TODO: Fix this statement (added hasattr() to make work temporarily)
-        if hasattr(infile, 'read'):
-            log(session, 'infile', infile.read())
-        else:
-            log(session, 'infile', infile)
+        infile.seek(0)
+        log(session, 'infile', infile.read())
         log(session, 'args', repr(args))
         if crash:
             log(session, 'crash', crash)
