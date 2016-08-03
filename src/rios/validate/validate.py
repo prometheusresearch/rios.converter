@@ -15,6 +15,7 @@ import magic
 
 
 from rex.core import Validate, Error, guard
+from ..common import csv_data_dictionary
 
 
 __all__ = (
@@ -166,32 +167,52 @@ class RedcapFileAttachmentVal(FileAttachmentVal):
     COLUMNS = REQUIRED_COLUMNS + OPTIONAL_COLUMNS
 
     def validate(self, attachment):
-        header = attachment.next()
-        # Make sure all column headers are valid
+        data_dict = csv_data_dictionary(attachment)
+        header = data_dict.keys()
+
+        # Check that all column headers are valid
+        bad_headers = []
         if not all(value in self.COLUMNS for value in header):
-            error = Error('Unexpected column headers(s)')
-            error.wrap('Expected column headers:', ", ".join(self.COLUMNS))
-            error.wrap('Got:', ", ".join(header))
-            raise error
+            for h in header:
+                if h not in self.COLUMNS:
+                    bad_headers.append(h)
+            bad_headers = set(bad_headers)
+
+        # Check for required headers
+        missing_headers = []
         if not all(value in header for value in self.REQUIRED_COLUMNS):
-            error = Error('Missing required column header(s)')
-            error.wrap('Expected required column headers:',
-                ", ".join(self.REQUIRED_COLUMNS))
-            error.wrap('Got', ", ".join(header))
-            raise error
+            for v in self.REQUIRED_COLUMNS:
+                if v not in header:
+                    missing_headers.append(v)
+            missing_headers = set(missing_headers)
+
         # Check Field Type row for unexpected values
-        column_values = {}
-        for h_value in header:
-            column_values[h_value] = []
-        for row in attachment:
-            for h_value, value in zip(header, row):
-                column_values[h_value].append(value)
-        if not all(value in self.FIELD_TYPES
-            for value in column_values['Field Type']):
-            error = Error('Unexpected Field Type value')
-            error.wrap('Expected Field Type values:',
-                ", ".join(self.FIELD_TYPES))
-            error.wrap('Got:', column_values['Field Type'])
+        bad_field_types = []
+        if not all(d in self.FIELD_TYPES for d in data_dict['Field Type']):
+            for d in data_dict['Field Type']:
+                k = d.keys()
+                for v in k:
+                    if v not in self.FIELD_TYPES:
+                        bad_field_types.append(v)
+            bad_field_types = set(bad_field_types)
+
+        if bad_headers or missing_headers or bad_field_types:
+            error = Error('Validation error')
+            if bad_headers:
+                error.wrap('Unexpected column header(s). Got:',
+                    ", ".join(bad_headers))
+                error.wrap('Allowable column headers:',
+                    ", ".join(self.COLUMNS))
+            if missing_headers:
+                error.wrap('Missing required column header(s). Got:',
+                    ", ".join(missing_headers))
+                error.wrap('Required column headers:',
+                    ", ".join(self.REQUIRED_COLUMNS))
+            if bad_field_types:
+                error.wrap('Unexpected Field Type value(s). Got:',
+                    ", ".join(bad_field_types))
+                error.wrap('Allowable Field Type values:',
+                    ", ".join(self.FIELD_TYPES))
             raise error
 
 
