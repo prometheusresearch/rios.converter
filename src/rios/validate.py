@@ -15,18 +15,21 @@ import magic
 
 
 from rex.core import Validate, Error, guard
-from ..common import csv_data_dictionary
+from common import csv_data_dictionary
 
 
 __all__ = (
-    'RedcapFileValidate',
-    'QualtricsFileValidate',
+    'SystemFileAttachmentVal',
+    'validate_system_file',
 )
 
 
-class FileAttachmentVal(Validate):
+class SystemFileAttachmentVal(Validate):
     """
     Abstract base class for an HTML form field containing an uploaded file.
+
+    Subclass for each third party instrument system requiring validation. Each
+    subclass is automatically handled by the :function:validate function.
 
     Implementations must override `loader`, `system`, and `content_type`
     values along with overriding the `validate` function.
@@ -60,7 +63,8 @@ class FileAttachmentVal(Validate):
     loader = NotImplemented
     loader_args = []
     loader_kwargs = {}
-    open_args = None
+    open_args = []
+    open_kwargs = {}
     system = NotImplemented
     content_type = NotImplemented
 
@@ -86,9 +90,7 @@ class FileAttachmentVal(Validate):
         )
         attachment.seek(0)
         if self.content_type not in file_type:
-            error = Error('Incorrect file type')
-            error.wrap('Got:', str(file_type))
-            raise error
+            raise Error('Incorrect file type. Got:', str(file_type))
         return attachment
             
 
@@ -100,7 +102,7 @@ class FileAttachmentVal(Validate):
         """
         try:
             return self.loader(
-                (open(attachment, *self.open_args)
+                (open(attachment, *self.open_args, **self.open_kwargs)
                         if isinstance(attachment, six.string_types)
                         else attachment
                 ),
@@ -122,7 +124,7 @@ class FileAttachmentVal(Validate):
         raise NotImplementedError("%s.validate()" % self.__class__.__name__)
 
 
-class RedcapFileAttachmentVal(FileAttachmentVal):
+class RedcapFileAttachmentVal(SystemFileAttachmentVal):
     """ Validation mechanism for REDCap files. """
 
     loader = csv.reader
@@ -176,7 +178,7 @@ class RedcapFileAttachmentVal(FileAttachmentVal):
             for h in header:
                 if h not in self.COLUMNS:
                     bad_headers.append(h)
-            bad_headers = set(bad_headers)
+            bad_headers = set(bad_headers) # Get unique values
 
         # Check for required headers
         missing_headers = []
@@ -184,18 +186,19 @@ class RedcapFileAttachmentVal(FileAttachmentVal):
             for v in self.REQUIRED_COLUMNS:
                 if v not in header:
                     missing_headers.append(v)
-            missing_headers = set(missing_headers)
+            missing_headers = set(missing_headers) # Get unique values
 
         # Check Field Type row for unexpected values
         bad_field_types = []
         if not all(d in self.FIELD_TYPES for d in data_dict['Field Type']):
             for d in data_dict['Field Type']:
-                for t, ln in d.iteritems():
+                for t, ln in six.iteritems(d):
                     if t not in self.FIELD_TYPES:
                         bad_field_types.append(d)
 
         if bad_headers or missing_headers or bad_field_types:
-            error = Error('Validation error')
+            error = Error('REDCap file validation error',
+                'Please fix these errors and try again')
             if bad_headers:
                 error.wrap('Unexpected column header(s). Got:',
                     ", ".join(bad_headers))
@@ -209,7 +212,7 @@ class RedcapFileAttachmentVal(FileAttachmentVal):
             if bad_field_types:
                 errors = []
                 for d in bad_field_types:
-                    for k, v in d.iteritems():
+                    for k, v in six.iteritems(d):
                         errors.append("Bad value: '" + k + "', on line: " + v)
                 error.wrap('Unexpected Field Type value(s). Got:',
                     ", ".join(errors))
@@ -218,7 +221,7 @@ class RedcapFileAttachmentVal(FileAttachmentVal):
             raise error
 
 
-class QualtricsFileAttachmentVal(FileAttachmentVal):
+class QualtricsFileAttachmentVal(SystemFileAttachmentVal):
     """ Validation mechanism for Qualtrics files. """
 
     loader = json.load
@@ -227,3 +230,26 @@ class QualtricsFileAttachmentVal(FileAttachmentVal):
 
     def validate(self, attachment):
         pass
+
+# Autogenerate system validators based on SystemFileAttachmentVal subclasses
+SYSTEM_TYPES = {
+    cls.system: cls() for cls in SystemFileAttachmentVal.__subclasses__()
+}
+
+
+def validate_system_file(infile, system):
+    """
+    Validation mechanism for incoming, third party instrument definition files.
+
+    :param infile: An attachment payload to validate
+    :type infile: cgi.Fieldstorage object
+    :param system: Type of instrument file to validate
+    :type system: string
+    :raises Error: If system parameter is malformed
+    """
+    if not isinstance(system, six.string_types) and system not in SYSTEM_TYPES:
+        error = Error('Expected valid system types')
+        error.wrap('Got:', repr(system))
+        raise error
+
+    return SYSTEM_TYPES[system](infile)

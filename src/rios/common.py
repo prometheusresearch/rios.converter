@@ -3,6 +3,9 @@
 #
 
 
+from rex.core import Error
+
+
 __all__ = (
     'csv_data_dictionary',
 )
@@ -11,8 +14,7 @@ __all__ = (
 def csv_data_dictionary(csv):
     """
     Generates a dictionary with a key per header value. The values are lists
-    containing dicts of value and line number (for each value's location)
-    key-value pairs.
+    containing dicts of value and corresponding line number.
 
     For example:
         {
@@ -29,13 +31,16 @@ def csv_data_dictionary(csv):
     :returns: Data dictionary of CSV
     :rtype: dictionary
     """
-    assert hasattr(csv, 'next')
-    csv_header = csv.next()
-    csv_data_dictionary = {}
-    for header in csv_header:
-        csv_data_dictionary[header] = []
-    for row in csv:
-        line_num = str(int(csv.line_num)) # Get rid of 'L' char
-        for header, value in zip(csv_header, row):
-            csv_data_dictionary[header].append({value: line_num})
-    return csv_data_dictionary
+    try:
+        csv_header = csv.next()
+        csv_data_dictionary = {}
+
+        for header in csv_header:
+            csv_data_dictionary[header] = []
+        for row in csv:
+            line_num = str(int(csv.line_num)) # Get rid of 'L' char
+            for header, value in zip(csv_header, row):
+                csv_data_dictionary[header].append({value: line_num})
+        return csv_data_dictionary
+    except Exception as exc:
+        raise Error('Error generating CSV data dictionary:', str(exc))

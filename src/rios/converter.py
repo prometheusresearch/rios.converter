@@ -33,7 +33,7 @@ from rios.conversion.qualtrics.to_rios import QualtricsToRios
 from rios.conversion.qualtrics.from_rios import QualtricsFromRios
 
 
-from validate import validate
+from validate import validate_system_file
 
 
 LOCALIZATION = 'en'
@@ -167,7 +167,7 @@ class ConvertToRios(Command):
 
         # Validate file
         try:
-            infile = validate(infile, system).file
+            infile = validate_system_file(infile, system).file
             infile.seek(0)
         except Error as exc:
             return req.get_response(exc)
