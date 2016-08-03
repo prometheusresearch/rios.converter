@@ -190,11 +190,9 @@ class RedcapFileAttachmentVal(FileAttachmentVal):
         bad_field_types = []
         if not all(d in self.FIELD_TYPES for d in data_dict['Field Type']):
             for d in data_dict['Field Type']:
-                k = d.keys()
-                for v in k:
-                    if v not in self.FIELD_TYPES:
-                        bad_field_types.append(v)
-            bad_field_types = set(bad_field_types)
+                for t, ln in d.iteritems():
+                    if t not in self.FIELD_TYPES:
+                        bad_field_types.append(d)
 
         if bad_headers or missing_headers or bad_field_types:
             error = Error('Validation error')
@@ -204,13 +202,17 @@ class RedcapFileAttachmentVal(FileAttachmentVal):
                 error.wrap('Allowable column headers:',
                     ", ".join(self.COLUMNS))
             if missing_headers:
-                error.wrap('Missing required column header(s). Got:',
+                error.wrap('Missing required column header(s):',
                     ", ".join(missing_headers))
                 error.wrap('Required column headers:',
                     ", ".join(self.REQUIRED_COLUMNS))
             if bad_field_types:
+                errors = []
+                for d in bad_field_types:
+                    for k, v in d.iteritems():
+                        errors.append("Bad value: '" + k + "', on line: " + v)
                 error.wrap('Unexpected Field Type value(s). Got:',
-                    ", ".join(bad_field_types))
+                    ", ".join(errors))
                 error.wrap('Allowable Field Type values:',
                     ", ".join(self.FIELD_TYPES))
             raise error
