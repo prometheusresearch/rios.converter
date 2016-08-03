@@ -188,7 +188,7 @@ class RedcapFileAttachmentVal(FileAttachmentVal):
                 column_values[h_value].append(value)
         if not all(value in self.FIELD_TYPES
             for value in column_values['Field Type']):
-            error = Error('Unexpected Fiel Type value')
+            error = Error('Unexpected Field Type value')
             error.wrap('Expected Field Type values:',
                 ", ".join(self.FIELD_TYPES))
             error.wrap('Got:', column_values['Field Type'])
