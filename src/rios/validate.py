@@ -6,11 +6,8 @@
 import cgi
 import csv
 import json
-import re
 import six
-import cStringIO
 import io
-import copy
 import magic
 
 
@@ -35,9 +32,10 @@ class SystemFileAttachmentVal(Validate):
     values along with overriding the `validate` function.
 
     `loader`
-        A function that loads a file into a buffer for processing. Depends on
-        the file type to validate. For example, CSV files will typically use
-        ``csv.reader`` as the loader function.
+        A dict with key of `loader` and value of a loader function that
+        corresponds to the file structure being processed for validation. For
+        example, CSV files will typically use :function:`csv.reader` as the
+        loader function.
     `loader_args`
         List of arguments to pass to loader function.
     `loader_kwargs`
@@ -63,16 +61,19 @@ class SystemFileAttachmentVal(Validate):
     loader = NotImplemented
     loader_args = []
     loader_kwargs = {}
-    open_args = []
-    open_kwargs = {}
     system = NotImplemented
     content_type = NotImplemented
+    file_descriptor = NotImplemented
+    file_format = NotImplemented
 
     def __call__(self, data):
         if (isinstance(data, cgi.FieldStorage) and
                 data.filename is not None and data.file is not None):
-            with guard('While processing file', str(data.filename)):
-                self.validate(self._load(self._content_type(data.file)))
+            with guard('Error encountered while processing file',
+                        str(data.filename)):
+                content_validated_file = self._content_type(data.file)
+                load_validated_file = self._load(content_validated_file)
+                self.validate(load_validated_file)
             return data
         error = Error("Expected an uploaded file")
         error.wrap("Got:", repr(data))
@@ -86,13 +87,20 @@ class SystemFileAttachmentVal(Validate):
         """
         file_type = magic.from_buffer(
             attachment.read(1024)
-                if hasattr(attachment, 'read') else attachment
+            if hasattr(attachment, 'read') else attachment
         )
         attachment.seek(0)
         if self.content_type not in file_type:
-            raise Error('Incorrect file type. Got:', str(file_type))
+            error = Error(
+                'Incorrect file type uploaded for system of type:',
+                str(self.system)
+            )
+            error.wrap('File type expected:', str(self.file_descriptor))
+            error.wrap(
+                'Please select a file of the correct type and try again'
+            )
+            raise error
         return attachment
-            
 
     def _load(self, attachment):
         """
@@ -101,17 +109,25 @@ class SystemFileAttachmentVal(Validate):
         :raises Error: If `loader` throws and exception
         """
         try:
-            return self.loader(
-                (open(attachment, *self.open_args, **self.open_kwargs)
-                        if isinstance(attachment, six.string_types)
-                        else attachment
-                ),
+            if isinstance(attachment, file):
+                load_this = io.BytesIO(attachment.read())
+            else:
+                load_this = attachment
+            return self.loader['loader'](
+                load_this,
                 *self.loader_args,
                 **self.loader_kwargs
             )
-        except Exception as exc:
-            error = Error('Error opening file for validation')
-            error.wrap('Got:', repr(exc))
+        except Exception:
+            error = Error(
+                'Invalid file content format encountered for system of type:',
+                str(self.system)
+            )
+            error.wrap('File content format expected', str(self.file_format))
+            error.wrap(
+                'Please select a file with the correct content formatting'
+                '  and try again'
+            )
             raise error
 
     def validate(self, attachment):
@@ -127,10 +143,14 @@ class SystemFileAttachmentVal(Validate):
 class RedcapFileAttachmentVal(SystemFileAttachmentVal):
     """ Validation mechanism for REDCap files. """
 
-    loader = csv.reader
-    open_args = ['rU',]
+    loader = {'loader': csv.reader}
+    # Loader kwargs barely matter since 'csv' module is NOT strict at all
+    # ...but might as well try!
+    loader_kwargs = {'strict': True, 'delimiter': ',', 'quotechar': '"'}
     system = 'redcap'
     content_type = 'ASCII text'
+    file_descriptor = 'CSV file'
+    file_format = 'Comma separated values formatted text'
 
     # Static references for validation
     FIELD_TYPES = [
@@ -172,25 +192,30 @@ class RedcapFileAttachmentVal(SystemFileAttachmentVal):
         data_dict = csv_data_dictionary(attachment)
         header = data_dict.keys()
 
-        # Check that all column headers are valid
-        bad_headers = []
-        if not all(value in self.COLUMNS for value in header):
-            for h in header:
-                if h not in self.COLUMNS:
-                    bad_headers.append(h)
-            bad_headers = set(bad_headers) # Get unique values
-
         # Check for required headers
         missing_headers = []
         if not all(value in header for value in self.REQUIRED_COLUMNS):
             for v in self.REQUIRED_COLUMNS:
                 if v not in header:
                     missing_headers.append(v)
-            missing_headers = set(missing_headers) # Get unique values
+            missing_headers = set(missing_headers)  # Get unique values
+
+        # Check that all column headers are valid
+        bad_headers = []
+        # Parse rest of headers if have required ones
+        if not missing_headers \
+                and not all(value in self.COLUMNS for value in header):
+            for h in header:
+                if h not in self.COLUMNS:
+                    bad_headers.append(h)
+            bad_headers = set(bad_headers)  # Get unique values
 
         # Check Field Type row for unexpected values
         bad_field_types = []
-        if not all(d in self.FIELD_TYPES for d in data_dict['Field Type']):
+        # Only parse 'Field Type' col if exists
+        if ('Field Type' in data_dict
+            and not all(d in self.FIELD_TYPES
+                        for d in data_dict['Field Type'])):
             for d in data_dict['Field Type']:
                 for t, ln in six.iteritems(d):
                     if t not in self.FIELD_TYPES:
@@ -198,35 +223,37 @@ class RedcapFileAttachmentVal(SystemFileAttachmentVal):
 
         if bad_headers or missing_headers or bad_field_types:
             error = Error('REDCap file validation error',
-                'Please fix these errors and try again')
+                            'Please fix these errors and try again')
             if bad_headers:
                 error.wrap('Unexpected column header(s). Got:',
-                    ", ".join(bad_headers))
+                                ", ".join(bad_headers))
                 error.wrap('Allowable column headers:',
-                    ", ".join(self.COLUMNS))
+                                ", ".join(self.COLUMNS))
             if missing_headers:
                 error.wrap('Missing required column header(s):',
-                    ", ".join(missing_headers))
+                                ", ".join(missing_headers))
                 error.wrap('Required column headers:',
-                    ", ".join(self.REQUIRED_COLUMNS))
+                                ", ".join(self.REQUIRED_COLUMNS))
             if bad_field_types:
                 errors = []
                 for d in bad_field_types:
                     for k, v in six.iteritems(d):
                         errors.append("Bad value: '" + k + "', on line: " + v)
                 error.wrap('Unexpected Field Type value(s). Got:',
-                    ", ".join(errors))
+                                ", ".join(errors))
                 error.wrap('Allowable Field Type values:',
-                    ", ".join(self.FIELD_TYPES))
+                                ", ".join(self.FIELD_TYPES))
             raise error
 
 
 class QualtricsFileAttachmentVal(SystemFileAttachmentVal):
     """ Validation mechanism for Qualtrics files. """
 
-    loader = json.load
+    loader = {'loader': json.load}
     system = 'qualtrics'
     content_type = 'ASCII text'
+    file_descriptor = 'QSF file'
+    file_format = 'JSON formatted text'
 
     def validate(self, attachment):
         pass

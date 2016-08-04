@@ -38,9 +38,9 @@ def csv_data_dictionary(csv):
         for header in csv_header:
             csv_data_dictionary[header] = []
         for row in csv:
-            line_num = str(int(csv.line_num)) # Get rid of 'L' char
+            line_num = str(int(csv.line_num))  # Get rid of 'L' char
             for header, value in zip(csv_header, row):
                 csv_data_dictionary[header].append({value: line_num})
         return csv_data_dictionary
     except Exception as exc:
-        raise Error('Error generating CSV data dictionary:', str(exc))
+        raise Error('Error generating CSV data dictionary:', repr(exc))
