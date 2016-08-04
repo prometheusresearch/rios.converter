@@ -20,7 +20,7 @@ setup(
     namespace_packages=['rios'],
     install_requires=[
         'rex.web >=3.5, <4',
-        'rios.conversion == 0.4.0',
+        'rios.conversion == 0.5.0',
         'python-magic == 0.4.12',
     ],
     extras_require={
