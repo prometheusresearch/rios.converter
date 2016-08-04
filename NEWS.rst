@@ -17,6 +17,7 @@ Change History
 * Prometheus Research logo footer added to all pages
 * Localization removed from conversion form and defaults to ``en``
 * Added logging feature to log warnings and/or errors
+* Extensible file validation mechanism implemented to run before conversion process
 
 0.3.0 (2016-07-21)
 ==================
