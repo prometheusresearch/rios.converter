@@ -12,6 +12,7 @@ import os
 import shutil
 import sys
 import zipfile
+import json
 
 
 from rex.core import get_packages
@@ -33,7 +34,7 @@ from rios.conversion.qualtrics.to_rios import QualtricsToRios
 from rios.conversion.qualtrics.from_rios import QualtricsFromRios
 
 
-from validate import validate_system_file
+import validate_csv
 
 
 LOCALIZATION = 'en'
@@ -165,12 +166,28 @@ class ConvertToRios(Command):
             outname,
             infile):
 
-        # Validate file
-        try:
-            infile = validate_system_file(infile, system).file
-            infile.seek(0)
-        except Error as exc:
-            return req.get_response(exc)
+        # Validate file with props.csvtoolkit validator API
+        if system == 'redcap':
+            result = validate_csv.RedcapCSVValidation(
+                validate_csv.StringLoader(infile.file)
+            )()
+            if not result.validation:
+                error = Error(
+                    "REDCap file validation failed. Got:",
+                    result.log
+                )
+                return req.get_response(error)
+        elif system == 'qualtrics':
+            try:
+                json.load(infile.file)
+            except Exception as exc:
+                error = Error(
+                    "Qualtrics file validation failed. The file content is not"
+                    " valid JSON text. Please try again with a valid QSF file."
+                )
+                return req.get_response(error)
+        infile = infile.file
+        infile.seek(0)
 
         session = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
         self.settings = get_settings()
