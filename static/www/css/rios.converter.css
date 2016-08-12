@@ -8,3 +8,8 @@
 .footer-img {
   max-height: 30px;
 }
+
+.notification {
+  color: red;
+  font-size: 0.75em;
+}
