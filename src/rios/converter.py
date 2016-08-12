@@ -1,6 +1,18 @@
+#
+# Copyright (c) 2016, Prometheus Research, LLC
+#
+
+
 import tempfile
 import traceback
 import datetime
+import docutils.core
+import glob
+import os
+import shutil
+import sys
+import zipfile
+
 
 from rex.core import get_packages
 from rex.core import get_settings
@@ -15,19 +27,17 @@ from rex.web import HandleLocation
 from rex.web import Parameter
 from rex.web import render_to_response
 from webob import Response
-import docutils.core
-import glob
-import os
-import shutil
-import sys
-import zipfile
 from rios.conversion.redcap.to_rios import RedcapToRios
 from rios.conversion.redcap.from_rios import RedcapFromRios
 from rios.conversion.qualtrics.to_rios import QualtricsToRios
 from rios.conversion.qualtrics.from_rios import QualtricsFromRios
 
 
+from validate import validate_system_file
+
+
 LOCALIZATION = 'en'
+INSTRUMENT_VERSION = '1.0'
 
 
 class TempDirSetting(Setting):
@@ -132,7 +142,6 @@ class ConvertToRios(Command):
         Parameter('format', StrVal('(yaml)|(json)')),
         Parameter('instrument_title', StrVal('.*')),
         Parameter('instrument_id', StrVal('([a-z0-9]{3}[a-z0-9]*)?')),
-        Parameter('instrument_version', StrVal('(\d+\.\d+)?')),
         Parameter('outname', StrVal('.*')),
         Parameter('infile', AnyVal()),
         ]
@@ -153,9 +162,15 @@ class ConvertToRios(Command):
             format,
             instrument_title,
             instrument_id,
-            instrument_version,
             outname,
             infile):
+
+        # Validate file
+        try:
+            infile = validate_system_file(infile, system).file
+            infile.seek(0)
+        except Error as exc:
+            return req.get_response(exc)
 
         session = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
         self.settings = get_settings()
@@ -163,16 +178,12 @@ class ConvertToRios(Command):
         temp_dir = tempfile.mkdtemp()
         outfile_prefix = os.path.join(temp_dir, outname)
         initialization_errors = []
-        if not hasattr(infile, 'file'):
-            initialization_errors.append('Input file is required.')
         if not outname:
             initialization_errors.append('Output filename prefix is required.')
-        if not instrument_version:
-            instrument_version = '1.0'
         args = [
                 '--infile', '-',  # stdin
                 '--outfile-prefix', outfile_prefix,
-                '--instrument-version', instrument_version, ]
+                '--instrument-version', INSTRUMENT_VERSION, ]
         if system == 'redcap':
             if not instrument_id:
                 initialization_errors.append('Instrument ID is required.')
@@ -198,7 +209,7 @@ class ConvertToRios(Command):
 
         crash = None
         with open(error_filename, 'wb') as stderr:
-            sys.stdin = infile.file
+            sys.stdin = infile
             # I can't explain why I am
             # unable to pass stderr as argument:
             #    result = self.to_class()(args, None, stderr)
@@ -218,8 +229,8 @@ class ConvertToRios(Command):
                 errors.append(err.read())
 
         log(session, '%s_to_rios' % (system,), '')
-        infile.file.seek(0)
-        log(session, 'infile', infile.file.read())
+        infile.seek(0)
+        log(session, 'infile', infile.read())
         log(session, 'args', repr(args))
         if crash:
             log(session, 'crash', crash)

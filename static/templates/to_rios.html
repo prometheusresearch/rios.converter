@@ -6,38 +6,31 @@
   </div>
   <div class="panel-body">
     <FORM action="{{PATH_URL}}/rios" method="post" enctype="multipart/form-data">
-      <P>
       <LABEL for="system">Convert From: </LABEL>
           <INPUT type="radio" name="system" value="qualtrics"/> Qualtrics
-          <INPUT type="radio" checked name="system" value="redcap"/> REDCap<BR/>
+          <INPUT type="radio" checked name="system" value="redcap"/> REDCap
+      <BR/>
       <LABEL for="infile"> Input file to convert: </LABEL>
-          <INPUT type="file" name="infile"/><BR/>
-      </P>
-      <P>
+          <INPUT type="file" name="infile" accept=".qsf, .csv"/>
+          <div class="notification">
+            The converter expects REDCap files to be in *.csv format and Qualtrics files to be in *.qsf format.
+          </div>
+      <BR/>
       <LABEL for="outname">Output filename prefix: </LABEL>
           <INPUT type="text" name="outname" data-toggle="tooltip" data-placement="right" title="The output files will be named beginning with the prefix provided (e.g., my-instrument would output the file my-instrument_i.yaml, my-instrument_f.yaml and my-instrument_c.yaml)."/><BR/>
       <LABEL for="format">Output format: </LABEL>
           <INPUT type="radio" name="format" value="json"/> JSON
           <INPUT type="radio" checked name="format" value="yaml"/> YAML<BR/>
-      </P>
-      <P>
-      <LABEL for="instrument_version">
-          Output Instrument version (default is <b>1.0</b>): </LABEL>
-          <INPUT type="text" name="instrument_version"/><BR/>
-      </P>
-      <P>
       <hr>
       Additional fields required for converting from REDCap:
-      </P>
-      <P>
+      <div class="notification">
+        The converter will output REDCap files in *.csv format and Qualtrics files in *.txt format.
+      </div>
       <LABEL for="instrument_title">Output Instrument title: </LABEL>
           <INPUT type="text" name="instrument_title" data-toggle="tooltip" data-placement="right" title="The title contains a short string that acts as a human-readable title or brief description of the Instrument described within (e.g., An Instrument Name)."/><BR/>
       <LABEL for="instrument_id">Output Instrument ID: </LABEL>
           <INPUT type="text" name="instrument_id" data-toggle="tooltip" data-html="true" data-placement="right" title="The ID must be a Unique Research Identifier (URI) as described in <a href='https://tools.ietf.org/html/rfc3986'>RFC3986</a> that uniquely identifies the instrument described with the definition (e.g., aninstrumentname). The instrument ID cannot contains spaces or special characters such as a hyphen or underscore."/><BR/>
-      </P>
-      <P>
       <INPUT type="submit" value="Send"/> <INPUT type="reset"/>
-      </P>
     </FORM>
   </div>
 </div>
