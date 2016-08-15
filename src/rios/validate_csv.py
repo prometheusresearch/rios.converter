@@ -183,16 +183,19 @@ class RedcapCSVValidation(SimpleCSVFileValidator):
                             self.failures[field_name][line].append(exc)
                             validator.failure_count += 1
                 except KeyError as exc:
+                    print "FAIL"
                     cols_trckr.append(str(line))
-        if cols_trckr:
+        if len(cols_trckr) > 0:
             self.logger.log(
                 'Found a column without a header. Check for too many'
-                ' fields defined on lines:\n  {}'.format(", ".join(cols_trckr))
+                ' fields defined on line(s):  {}'.format(", ".join(cols_trckr))
             )
             failure_tracker = True
 
         # Check for validation errors
-        if self.failures:
+        if failure_tracker and not self.failures:
+            return False
+        elif self.failures:
             self.logger.log("\nValidation failures:")
             log_validator_failures(self.validators, self.logger)
             self.logger.log("\nDetail error log:")

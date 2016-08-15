@@ -152,9 +152,12 @@ class ConvertToRios(Command):
         'redcap': RedcapToRios,
         }
 
-    convert_fail_template = 'rios.converter:/templates/convert_fail.html'
+    convert_fail_template = \
+        'rios.converter:/templates/convert_fail.html'
     form_params_fail_template = \
         'rios.converter:/templates/form_params_fail.html'
+    validation_fail_template = \
+        'rios.converter:/templates/validation_fail.html'
 
     def render(
             self,
@@ -167,26 +170,33 @@ class ConvertToRios(Command):
             infile):
 
         # Validate file with props.csvtoolkit validator API
+        infile = infile.file
+        infile.seek(0)
         if system == 'redcap':
             result = validate_csv.RedcapCSVValidation(
-                validate_csv.StringLoader(infile.file)
+                validate_csv.StringLoader(infile)
             )()
             if not result.validation:
-                error = Error(
-                    "REDCap file validation failed. Got:",
-                    result.log
+                return render_to_response(
+                    self.validation_fail_template,
+                    req,
+                    errors=result.log,
+                    system=system,
                 )
-                return req.get_response(error)
         elif system == 'qualtrics':
             try:
-                json.load(infile.file)
+                json.load(infile)
             except Exception as exc:
                 error = Error(
                     "Qualtrics file validation failed. The file content is not"
                     " valid JSON text. Please try again with a valid QSF file."
                 )
-                return req.get_response(error)
-        infile = infile.file
+                return render_to_response(
+                    self.validation_fail_template,
+                    req,
+                    errors=error,
+                    system=system,
+                )
         infile.seek(0)
 
         session = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
