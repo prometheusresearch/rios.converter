@@ -12,6 +12,7 @@ import os
 import shutil
 import sys
 import zipfile
+import json
 
 
 from rex.core import get_packages
@@ -33,7 +34,7 @@ from rios.conversion.qualtrics.to_rios import QualtricsToRios
 from rios.conversion.qualtrics.from_rios import QualtricsFromRios
 
 
-from validate import validate_system_file
+import validate_csv
 
 
 LOCALIZATION = 'en'
@@ -151,9 +152,12 @@ class ConvertToRios(Command):
         'redcap': RedcapToRios,
         }
 
-    convert_fail_template = 'rios.converter:/templates/convert_fail.html'
+    convert_fail_template = \
+        'rios.converter:/templates/convert_fail.html'
     form_params_fail_template = \
         'rios.converter:/templates/form_params_fail.html'
+    validation_fail_template = \
+        'rios.converter:/templates/validation_fail.html'
 
     def render(
             self,
@@ -165,12 +169,35 @@ class ConvertToRios(Command):
             outname,
             infile):
 
-        # Validate file
-        try:
-            infile = validate_system_file(infile, system).file
-            infile.seek(0)
-        except Error as exc:
-            return req.get_response(exc)
+        # Validate file with props.csvtoolkit validator API
+        infile = infile.file
+        infile.seek(0)
+        if system == 'redcap':
+            result = validate_csv.RedcapCSVValidation(
+                validate_csv.StringLoader(infile)
+            )()
+            if not result.validation:
+                return render_to_response(
+                    self.validation_fail_template,
+                    req,
+                    errors=result.log,
+                    system=system,
+                )
+        elif system == 'qualtrics':
+            try:
+                json.load(infile)
+            except Exception as exc:
+                error = Error(
+                    "Qualtrics file validation failed. The file content is not"
+                    " valid JSON text. Please try again with a valid QSF file."
+                )
+                return render_to_response(
+                    self.validation_fail_template,
+                    req,
+                    errors=error,
+                    system=system,
+                )
+        infile.seek(0)
 
         session = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
         self.settings = get_settings()

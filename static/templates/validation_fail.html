@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="panel panel-danger">
+  <div class="panel-heading">
+    <h4>File Validation Error</h4>
+  </div>
+  <div class="panel-body">
+    <p>
+      The supplied {% if 'redcap' in system %}REDCap CSV{% else %}Qualtrics QSF{% endif %} file did not pass validation. Please check the
+      error log below, make the necessary corrections, and try again.
+      </p>
+    <br/>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <label>Errors:</label>
+      </div>
+      <div class="panel-body">
+          <pre>{{ errors }}</pre>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
