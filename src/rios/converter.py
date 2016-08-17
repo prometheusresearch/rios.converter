@@ -186,7 +186,7 @@ class ConvertToRios(Command):
         elif system == 'qualtrics':
             try:
                 json.load(infile)
-            except Exception as exc:
+            except Exception:
                 error = Error(
                     "Qualtrics file validation failed. The file content is not"
                     " valid JSON text. Please try again with a valid QSF file."
