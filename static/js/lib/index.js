@@ -14,8 +14,3 @@ require('bootstrap')
 $(function () {
   $('[data-toggle="tooltip"]').tooltip();
 });
-
-// Include footer image
-import prometheusFooterImg from '../img/prometheus_footer.png';
-
-//export promtheusFooterImg;
