@@ -10,4 +10,4 @@ dist
 tests/sandbox
 .coverage
 node_modules
-www
+www/bundle/**
