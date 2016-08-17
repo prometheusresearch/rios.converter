@@ -9,9 +9,6 @@ import collections
 
 
 from props.csvtoolkit import (
-    DEFAULT_DELIMITER,
-    DEFAULT_VALIDATOR,
-
     SimpleCSVFileValidator,
     SimpleLogger,
 
@@ -69,7 +66,7 @@ class RedcapCSVValidation(SimpleCSVFileValidator):
         'Text Validation Max': [AnyVal()],
         'Text Validation Min': [AnyVal()],
         'Text Validation Type OR Show Slider Number': [AnyVal()],
-        'Variable / Field Name': [AnyVal()], 
+        'Variable / Field Name': [AnyVal()],
     }
 
     REQUIRED_HEADERS = [
@@ -110,7 +107,7 @@ class RedcapCSVValidation(SimpleCSVFileValidator):
             'Text Validation Max': [AnyVal()],
             'Text Validation Min': [AnyVal()],
             'Text Validation Type OR Show Slider Number': [AnyVal()],
-            'Variable / Field Name': [AnyVal()], 
+            'Variable / Field Name': [AnyVal()],
         }
 
         failure_tracker = False
@@ -131,7 +128,7 @@ class RedcapCSVValidation(SimpleCSVFileValidator):
 
         # Check for required headers
         missing_headers = []
-        if not all(value in reader.fieldnames \
+        if not all(value in reader.fieldnames
                     for value in self.REQUIRED_HEADERS):
             for v in self.REQUIRED_HEADERS:
                 if v not in reader.fieldnames:
