@@ -9,3 +9,5 @@ dist
 *.v.*
 tests/sandbox
 .coverage
+node_modules
+www/bundle/**
