@@ -8,7 +8,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='rios.converter',
-    version='0.4.0',
+    version='0.5.0',
     description="RIOS converter website",
     long_description=open('README.rst', 'r').read(),
     maintainer="Prometheus Research, LLC",
@@ -19,7 +19,7 @@ setup(
     packages=find_packages('src'),
     namespace_packages=['rios'],
     install_requires=[
-        'rex.web >=3.5, <4',
+        'rex.web == 3.7.1',
         'rios.conversion == 0.5.0',
         'props.csvtoolkit == 0.1.1',
         'python-magic == 0.4.12',
@@ -42,4 +42,9 @@ setup(
     test_suite='nose.collector',
     rex_init='rios.converter',
     rex_static='static',
+    rex_bundle={
+        './www/bundle': [
+            'webpack:',
+        ],
+    },
 )

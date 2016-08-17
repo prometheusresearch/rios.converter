@@ -9,3 +9,4 @@ dist
 *.v.*
 tests/sandbox
 .coverage
+www
