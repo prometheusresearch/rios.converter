@@ -3,7 +3,7 @@
   "version": "0.5.0",
   "main": "./lib/index",
   "rex": {
-    "style": "./lib/index.less"
+    "style": "./style/index.less"
   },
   "peerDependencies": {
     "jquery": "1.12.4",

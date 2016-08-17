@@ -1,2 +1,21 @@
+/**
+ * @copyright 2016, Prometheus Research, LLC
+ */
+
+'use strict';
+
+// Include jQuery for bootstrap
+var $ = global.jQuery = require('jquery');
+
+// Include bootstrap JS deps
+require('bootstrap')
+
 // Select all elements with data-toggle="tooltips" in the document
-$('[data-toggle="tooltip"]').tooltip();
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip();
+});
+
+// Include footer image
+import prometheusFooterImg from '../img/prometheus_footer.png';
+
+//export promtheusFooterImg;
