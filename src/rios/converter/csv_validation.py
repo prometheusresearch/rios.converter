@@ -22,7 +22,8 @@ from props.csvtoolkit import (
 
 
 __all__ = (
-    'RedcapCSVValidation',
+    'RedcapLegacyCsvValidator',
+    'RedcapModernCSVValidator',
     'StringLoader',
 )
 
@@ -30,14 +31,21 @@ __all__ = (
 DEFAULT_DISPLAY_LIMIT = 30
 
 
-class RedcapCSVValidationLogger(SimpleLogger):
+class RedcapCsvValidationLogger(SimpleLogger):
     """ REDCap CSV validation logger. """
 
     pass
 
 
-class RedcapCSVValidation(SimpleCSVFileValidator):
-    """ Validates REDCap files with props.csvtoolkit validation API. """
+class RedcapLegacyCsvValidator(SimpleCSVFileValidator):
+    """ Validate legacy REDCap instrument files """
+
+    # TODO: Implement validation
+    pass
+
+
+class RedcapModernCsvValidator(SimpleCSVFileValidator):
+    """ Validates modern REDCap instrument files """
 
     validators = {
         'Branching Logic (Show field only if...)': [AnyVal()],

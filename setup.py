@@ -19,10 +19,12 @@ setup(
     packages=find_packages('src'),
     namespace_packages=['rios'],
     install_requires=[
-        'rex.web == 3.7.1',
-        'rios.conversion == 0.5.0',
-        'props.csvtoolkit == 0.1.1',
-        'python-magic == 0.4.12',
+        'rex.web==3.7.1',
+        'rios.conversion==0.6.0',
+        'props.csvtoolkit==0.1.1',
+        'python-magic==0.4.12',
+        'simplejson==3.8.2',
+        'cached-property>=1,<2',
     ],
     extras_require={
         'dev': [
