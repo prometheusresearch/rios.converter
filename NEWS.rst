@@ -3,7 +3,14 @@ Change History
 **************
 
 
-0.4.0 (2016-xx-xx)
+0.5.0 (2016-09-05)
+==================
+
+* Implemented new ``rios.conversion`` 0.6.x API
+* Known issue: RIOS to REDCap calculation conversion is broken
+
+
+0.4.0 (2016-07-21)
 ==================
 
 * Added Twitter Bootstrap CSS styling to application
