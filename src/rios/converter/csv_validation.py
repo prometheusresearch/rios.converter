@@ -25,7 +25,7 @@ from props.csvtoolkit import (
 
 __all__ = (
     'RedcapLegacyCsvValidator',
-    'RedcapModernCSVValidator',
+    'RedcapModernCsvValidator',
     'StringLoader',
 )
 
@@ -235,14 +235,14 @@ class RedcapLegacyCsvValidator(SimpleCSVFileValidator):
     """ Validate legacy REDCap instrument files """
 
     validators = {
-        'fieldID': [UniqueVal(),],
-        'text': [AnyVal(),],
-        'data_type': [AnyVal(),],
-        'page': [AnyVal(),],
-        'repeating_group_name': [AnyVal(),],
-        'help': [AnyVal(),],
-        'error': [AnyVal(),],
-        'enumeration_type': [AnyVal(),],
+        'fieldID': [UniqueVal(), ],
+        'text': [AnyVal(), ],
+        'data_type': [AnyVal(), ],
+        'page': [AnyVal(), ],
+        'repeating_group_name': [AnyVal(), ],
+        'help': [AnyVal(), ],
+        'error': [AnyVal(), ],
+        'enumeration_type': [AnyVal(), ],
     }
 
     logger = RedcapLegacyCsvValidationLogger()
@@ -251,14 +251,14 @@ class RedcapLegacyCsvValidator(SimpleCSVFileValidator):
         # Temporary hack for validator instantiations not being restarted
         # between validation passes
         self.validators = {
-            'fieldID': [UniqueVal(),],
-            'text': [AnyVal(),],
-            'data_type': [AnyVal(),],
-            'page': [AnyVal(),],
-            'repeating_group_name': [AnyVal(),],
-            'help': [AnyVal(),],
-            'error': [AnyVal(),],
-            'enumeration_type': [AnyVal(),],
+            'fieldID': [UniqueVal(), ],
+            'text': [AnyVal(), ],
+            'data_type': [AnyVal(), ],
+            'page': [AnyVal(), ],
+            'repeating_group_name': [AnyVal(), ],
+            'help': [AnyVal(), ],
+            'error': [AnyVal(), ],
+            'enumeration_type': [AnyVal(), ],
         }
 
         return super(RedcapLegacyCsvValidator, self).validate(self)

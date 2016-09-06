@@ -52,7 +52,6 @@ def test_rios_to_redcap():
     print Request.blank('/convert/from/rios', POST={
                 'system': 'redcap', 
                 'format': 'yaml', 
-                'localization':'en', 
                 'instrument_file': ('format_1_i.yaml', i_file),
                 'form_file': ('format_1_f.yaml', f_file),
                 'calculationset_file': ('format_1_c.yaml', c_file),
@@ -77,7 +76,6 @@ def test_rios_to_qualtrics():
     print Request.blank('/convert/from/rios', POST={
                 'system': 'qualtrics', 
                 'format': 'yaml', 
-                'localization':'en', 
                 'instrument_file': ('format_1_i.yaml', i_file),
                 'form_file': ('format_1_f.yaml', f_file),
                 'calculationset_file': ('format_1_c.yaml', c_file),

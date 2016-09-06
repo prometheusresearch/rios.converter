@@ -3,16 +3,11 @@
 #
 
 
-import tempfile
-import traceback
 import datetime
 import docutils.core
-import glob
 import os
-import io
 import cStringIO
 import shutil
-import sys
 import zipfile as ZIPFILE
 import simplejson
 import collections
@@ -27,9 +22,7 @@ from webob import Response
 from webob.static import FileIter, BLOCK_SIZE
 from webob.exc import HTTPMethodNotAllowed
 from rex.core import (
-    AnyVal,
     StrVal,
-    Setting,
     Error,
     Validate,
     get_packages,
@@ -43,13 +36,19 @@ from rex.web import (
     Parameter,
     render_to_response,
 )
+from rios.core import (
+    ValidationError,
+    validate_instrument,
+    validate_form,
+    validate_calculationset,
+)
 from rios.conversion import (
     redcap_to_rios,
     qualtrics_to_rios,
     rios_to_redcap,
     rios_to_qualtrics,
 )
-from rios.conversion.base import(
+from rios.conversion.base import (
     DEFAULT_LOCALIZATION,
     DEFAULT_VERSION,
 )
@@ -134,14 +133,13 @@ def write_to_buffer(file_object, payload, data_type=None, *args, **kwargs):
             # Payload must contain one CSV line per list item
             csv_writer = csv.writer(
                 file_object,
-                delimeter=',',
+                delimiter=',',
                 quotechar='\"',
                 quoting=csv.QUOTE_MINIMAL,
                 *args,
                 **kwargs
             )
-            for row in payload:
-                csv_writer.writerow(row)
+            csv_writer.writerows(payload[0])
         elif isinstance(payload, dict) and 'fieldnames' in kwargs:
             fieldnames = kwargs['fieldnames']
             csv_writer = csv.DictWriter(
@@ -168,6 +166,7 @@ def write_to_buffer(file_object, payload, data_type=None, *args, **kwargs):
     if hasattr(file_object, 'seek'):
         file_object.seek(0)
 
+
 def write_to_zip(zipfile, name, payload, format, *args, **kwargs):
     """
     Writes the specified container to a zipfile.
@@ -185,6 +184,39 @@ def write_to_zip(zipfile, name, payload, format, *args, **kwargs):
         **kwargs
     )
     zipfile.writestr(name, container.read())
+
+
+class AttachmentMaybeVal(Validate):
+    """
+    Accepts an HTML form field containing that MAY contain an uploaded file.
+
+    Produces a pair: the file name and an open file object, or returns None if
+    no file was uploaded. Taken from rex.attach 2.0.4.
+    """
+
+    Attachment = collections.namedtuple('Attachment', 'name content')
+
+    def __call__(self, data):
+        if (isinstance(data, cgi.FieldStorage) and
+                data.filename is not None and data.file is not None):
+            bffr = (
+                data.file
+                if isinstance(data.file,
+                              (cStringIO.OutputType, cStringIO.InputType,))
+                else cStringIO.StringIO(data.file.read())
+            )
+            return self.Attachment(data.filename, bffr)
+        if (isinstance(data, tuple) and len(data) == 2 and
+                isinstance(data[0], (str, unicode)) and
+                hasattr(data[1], 'read')):
+            filename = data[0]
+            bffr = cStringIO.StringIO(data[1].read())
+            return self.Attachment(filename, bffr)
+        if not data:
+            return None
+        error = Error("Expected a valid, uploaded file or no file")
+        error.wrap("Got:", repr(data))
+        raise error
 
 
 class AttachmentVal(Validate):
@@ -321,7 +353,7 @@ class ConvertToRiosProcessorApi(Command):
         Parameter('instrument_id', StrVal(r'([a-z0-9]{3}[a-z0-9]*)?')),
         Parameter('outname', StrVal(r'^[a-zA-Z0-9_]+$')),
         Parameter('infile', AttachmentVal()),
-        ]
+    ]
 
     converters = {
         'qualtrics': qualtrics_to_rios,
@@ -438,7 +470,6 @@ class ConvertToRiosProcessorApi(Command):
 
         # API INITIALIATION
         session = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
-
         if system == 'redcap':
             converter_kwargs = {
                 'instrument_version': DEFAULT_VERSION,
@@ -453,7 +484,7 @@ class ConvertToRiosProcessorApi(Command):
             converter_kwargs = {
                 'stream': upload_file,
                 'suppress': True,  # Need logged messages
-                'filemetadata': True, # Pull metadata from file
+                'filemetadata': True,  # Pull metadata from file
             }
 
         # LOG INITIALIZATION
@@ -471,7 +502,6 @@ class ConvertToRiosProcessorApi(Command):
             zip_filename = outname + '.zip'
 
             # Process data structures and insert into zip
-            zip_file_buffer = None
             with ZIPFILE.ZipFile(zip_container, 'a', ZIPFILE.ZIP_DEFLATED) \
                         as zipfile:
                 # Write instrument file to zip
@@ -501,7 +531,7 @@ class ConvertToRiosProcessorApi(Command):
                         payload=result['calculationset'],
                         format=format,
                     )
-                
+
                 # Write log file to zip
                 if 'logs' in result:
                     log_name = 'conversion_log.txt'
@@ -524,7 +554,7 @@ class ConvertToRiosProcessorApi(Command):
             return render_to_response(
                 self.convert_fail_template,
                 req,
-                errors=[fail_log,],
+                errors=[fail_log, ],
                 system=system
             )
         else:
@@ -537,142 +567,176 @@ class ConvertToRiosProcessorApi(Command):
             return render_to_response(
                 self.convert_fail_template,
                 req,
-                errors=[str(error),],
+                errors=[str(error), ],
                 system=system
             )
 
 
-#class ConvertFromRiosProcessorApi(Command):
-#
-#    path = '/convert/from/rios'
-#    access = 'anybody'
-#    parameters = [
-#        Parameter('system', StrVal('(qualtrics)|(redcap)'), ),
-#        Parameter('format', StrVal('(yaml)|(json)')),
-#        Parameter('instrument_file', AnyVal()),
-#        Parameter('form_file', AnyVal()),
-#        Parameter('calculationset_file', AnyVal()),
-#        Parameter('outname', StrVal('.*')), ]
-#
-#    converter_class = {
-#        'qualtrics': QualtricsFromRios,
-#        'redcap': RedcapFromRios,
-#        }
-#
-#    convert_fail_template = 'rios.converter:/templates/convert_fail.html'
-#    form_params_fail_template = \
-#        'rios.converter:/templates/form_params_fail.html'
-#
-#    def load_file(self, session, file_field):
-#        filename = os.path.join(self.temp_dir, file_field.filename)
-#        with open(filename, 'w') as fo:
-#            fo.write(file_field.file.read())
-#        log_file(session, filename)
-#        return filename
-#
-#    def render(
-#            self,
-#            req,
-#            system,
-#            format,
-#            instrument_file,
-#            form_file,
-#            calculationset_file,
-#            outname):
-#
-#        session = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
-#        self.settings = get_settings()
-#        tempfile.tempdir = self.settings.temp_dir
-#        self.temp_dir = tempfile.mkdtemp()
-#        outfile = os.path.join(self.temp_dir, outname)
-#        initialization_errors = []
-#        if not outname:
-#            initialization_errors.append('Output filename prefix is required.')
-#        if not format:
-#            format = 'yaml'
-#        args = [
-#                '--verbose',
-#                '--format', format,
-#                '--outfile', outfile,
-#                ]
-#        if hasattr(instrument_file, 'filename'):
-#            args.extend([
-#                    '--instrument',
-#                    '%s' % self.load_file(session, instrument_file)])
-#        else:
-#            initialization_errors.append(
-#                'An input instrument file is required.'
-#            )
-#        if hasattr(form_file, 'filename'):
-#            args.extend([
-#                    '--form',
-#                    '%s' % self.load_file(session, form_file)])
-#        else:
-#            initialization_errors.append('An input form file is required.')
-#        if hasattr(calculationset_file, 'filename'):
-#            args.extend([
-#                    '--calculationset',
-#                    '%s' % self.load_file(session, calculationset_file)])
-#        args.extend(['--localization', LOCALIZATION])
-#        if initialization_errors:
-#            shutil.rmtree(self.temp_dir)
-#            return render_to_response(
-#                self.form_params_fail_template,
-#                req,
-#                errors=initialization_errors,
-#            )
-#
-#        crash = None
-#        error_filename = outfile + '.stderr'
-#        with open(error_filename, 'wb') as stderr:
-#            # I can't eplain why I am
-#            # unable to pass stderr as argument:
-#            #    result = self.to_class()(args, None, stderr)
-#            # Stuff it into sys.stderr instead.
-#            sys.stderr = stderr
-#            try:
-#                errors = []
-#                result = self.converter_class[system]()(args)
-#            except Exception, e:
-#                result = -1
-#                errors.append(str(e))
-#                crash = traceback.format_exc()
-#            finally:
-#                sys.stderr = sys.__stderr__
-#        if result > 0:
-#            with open(error_filename, 'rb') as err:
-#                errors.append(err.read())
-#
-#        log(session, 'rios_to_%s' % (system,), '')
-#        log(session, 'args', repr(args))
-#        if crash:
-#            log(session, 'crash', crash)
-#
-#        if result == 0:
-#            zip_filename = outfile + '.zip'
-#            z = zipfile.ZipFile(zip_filename, 'w')
-#            if os.stat(error_filename).st_size:
-#                z.write(error_filename, '%s.warnings.txt' % outname)
-#            z.write(outfile, outname)
-#            z.close()
-#            with open(zip_filename, 'rb') as z:
-#                body = z.read()
-#            name = outname + '.zip'
-#            shutil.rmtree(self.temp_dir)
-#            log(session, 'output.zip', body)
-#            return Response(
-#                    content_type='application/zip',
-#                    content_disposition='attachment; filename="%s"' % name,
-#                    body=body)
-#        else:
-#            shutil.rmtree(self.temp_dir)
-#            log(session, 'errors', repr(errors))
-#            return render_to_response(
-#                self.convert_fail_template,
-#                req,
-#                errors=errors,
-#                system=system
-#            )
+class ConvertFromRiosProcessorApi(Command):
+
+    path = '/convert/from/rios'
+    access = 'anybody'
+    parameters = [
+        Parameter('system', StrVal('(qualtrics)|(redcap)'), ),
+        Parameter('format', StrVal('(yaml)|(json)')),
+        Parameter('instrument_file', AttachmentVal()),
+        Parameter('form_file', AttachmentVal()),
+        Parameter('calculationset_file', AttachmentMaybeVal()),
+        Parameter('outname', StrVal(r'^[a-zA-Z0-9_]+$')),
+    ]
+
+    converter_class = {
+        'qualtrics': rios_to_qualtrics,
+        'redcap': rios_to_redcap,
+        }
+
+    convert_fail_template = 'rios.converter:/templates/convert_fail.html'
+    form_params_fail_template = \
+        'rios.converter:/templates/form_params_fail.html'
+
+    @cached_property
+    def settings(self):
+        return get_settings()
+
+    def load_file(self, session, file_field):
+        filename = os.path.join(self.temp_dir, file_field.filename)
+        with open(filename, 'w') as fo:
+            fo.write(file_field.file.read())
+        log_file(session, filename)
+        return filename
+
+    def render(self, req, system, format, instrument_file,
+                                form_file, calculationset_file, outname):
+
+        # Allow only GET and HEAD requests.
+        if req.method not in ('POST',):
+            raise HTTPMethodNotAllowed()
+
+        # GENERATE DATA OBJECTS
+        if format == 'yaml':
+            instrument = yaml.safe_load(instrument_file.content)
+            form = yaml.safe_load(form_file.content)
+            calculationset = (
+                yaml.safe_load(calculationset_file.content)
+                if calculationset_file and
+                hasattr(calculationset_file, 'content')
+                else None
+            )
+        else:  # JSON files
+            instrument = simplejson.loads(instrument_file.content.read())
+            form = simplejson.loads(form_file.content.read())
+            calculationset = (
+                simplejson.loads(calculationset_file.content.read())
+                if calculationset_file and
+                hasattr(calculationset_file, 'content')
+                else None
+            )
+
+        # VALIDATE UPLOADED RIOS FILES
+        try:
+            val_type = 'Instrument'
+            validate_instrument(instrument)
+            val_type = 'Form'
+            validate_form(form, instrument=instrument)
+            if calculationset:
+                val_type = 'Calculationset'
+                validate_calculationset(
+                    calculationset,
+                    instrument=instrument
+                )
+        except ValidationError as exc:
+            error = Error(
+                (val_type + ' file validation error:'),
+                str(exc)
+            )
+            return render_to_response(
+                self.convert_fail_template,
+                req,
+                errors=[str(error), ],
+                system=system
+            )
+        else:
+            # Rewind file objects
+            instrument_file.content.seek(0)
+            form_file.content.seek(0)
+            calculationset_file.content.seek(0)
+
+        # API INITALIZATION
+        session = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
+        converter_kwargs = {
+            'instrument': instrument,
+            'form': form,
+            'calculationset': calculationset,
+            'localization': DEFAULT_LOCALIZATION,
+            'suppress': True,  # Need logged messages
+        }
+        log(session, 'rios_to_%s' % (system,), '')
+        log(session, 'conversion_params.log', repr(converter_kwargs))
+
+        # PROCESS FILE
+        if system == 'redcap':
+            result = rios_to_redcap(**converter_kwargs)
+        else:  # system == 'qualtrics'
+            result = rios_to_qualtrics(**converter_kwargs)
+
+        # PROCESS RESULT AND RETURN RELEVANT FILE
+        if 'instrument' in result:
+            # Initialize zip file
+            zip_container = cStringIO.StringIO()
+            zip_filename = outname + '.zip'
+
+            # Process data structures and insert into zip
+            with ZIPFILE.ZipFile(zip_container, 'a', ZIPFILE.ZIP_DEFLATED) \
+                        as zipfile:
+                # Write instrument file to zip
+                instrument_name = (
+                    str(outname) + ('.csv' if system == 'redcap' else '.txt')
+                )
+                write_to_zip(
+                    zipfile=zipfile,
+                    name=instrument_name,
+                    payload=result['instrument'],
+                    format='csv',
+                )
+
+                # Write log file to zip
+                if 'logs' in result:
+                    log_name = 'conversion_log.txt'
+                    write_to_zip(
+                        zipfile=zipfile,
+                        name=log_name,
+                        payload=result['logs'],
+                        format=None
+                    )
+
+            # Rewrind zipfile object
+            zip_container.seek(0)
+
+            log(session, 'output.zip', zip_container)
+            response = BufferedFileApp(zip_container, zip_filename)
+            return response(req)
+        elif 'failure' in result:
+            fail_log = str(result['failure'])
+            log(session, 'failure.log', fail_log)
+            return render_to_response(
+                self.convert_fail_template,
+                req,
+                errors=[fail_log, ],
+                system=system
+            )
+        else:
+            # Conversion result does not contain the proper structure
+            error = Error(
+                'Unexpected serve side error occured',
+                'Unable to convert data dictionary at this time'
+            )
+            log(session, 'error.log', str(error))
+            return render_to_response(
+                self.convert_fail_template,
+                req,
+                errors=[str(error), ],
+                system=system
+            )
 
 
 class HandleNotFound(HandleError):

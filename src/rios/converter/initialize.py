@@ -6,7 +6,7 @@
 import os
 
 
-from rex.core import Initialize, get_settings
+from rex.core import Error, Initialize, get_settings
 
 
 __all__ = ('ConverterInitialize',)
