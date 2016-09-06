@@ -14,6 +14,8 @@ from props.csvtoolkit import (
 
     EnumVal,
     AnyVal,
+    UniqueVal,
+    BaseTypeValidator,
 
     StringLoader,
 
@@ -31,16 +33,25 @@ __all__ = (
 DEFAULT_DISPLAY_LIMIT = 30
 
 
-class RedcapCsvValidationLogger(SimpleLogger):
+class RequiredStrVal(BaseTypeValidator):
+    """ Required string field must contain a string """
+
+    def __init__(self):
+        super(RequiredStrVal, self).__init__()
+        self.empty_values = set([])
+
+    def validate(self, field, row={}):
+        if not field:  # Empty strings are falsey
+            self.empty_values.add(field)
+            raise ValidationException("Field cannot be an empty value")
+
+    def fails(self):
+        pass
+
+
+class RedcapModernCsvValidationLogger(SimpleLogger):
     """ REDCap CSV validation logger. """
 
-    pass
-
-
-class RedcapLegacyCsvValidator(SimpleCSVFileValidator):
-    """ Validate legacy REDCap instrument files """
-
-    # TODO: Implement validation
     pass
 
 
@@ -51,7 +62,7 @@ class RedcapModernCsvValidator(SimpleCSVFileValidator):
         'Branching Logic (Show field only if...)': [AnyVal()],
         'Choices, Calculations, OR Slider Labels': [AnyVal()],
         'Custom Alignment': [AnyVal()],
-        'Field Label': [AnyVal()],
+        'Field Label': [RequiredStrVal()],
         'Field Note': [AnyVal()],
         'Field Type': [
             EnumVal([
@@ -66,7 +77,7 @@ class RedcapModernCsvValidator(SimpleCSVFileValidator):
                 'yesno',
             ])
         ],
-        'Form Name': [AnyVal()],
+        'Form Name': [RequiredStrVal()],
         'Identifier?': [AnyVal()],
         'Question Number (surveys only)': [AnyVal()],
         'Required Field?': [AnyVal()],
@@ -74,7 +85,7 @@ class RedcapModernCsvValidator(SimpleCSVFileValidator):
         'Text Validation Max': [AnyVal()],
         'Text Validation Min': [AnyVal()],
         'Text Validation Type OR Show Slider Number': [AnyVal()],
-        'Variable / Field Name': [AnyVal()],
+        'Variable / Field Name': [UniqueVal()],
     }
 
     REQUIRED_HEADERS = [
@@ -85,6 +96,8 @@ class RedcapModernCsvValidator(SimpleCSVFileValidator):
         "Choices, Calculations, OR Slider Labels",
     ]
 
+    logger = RedcapModernCsvValidationLogger()
+
     def validate(self):  # noqa: MC0001
         # Temporary hack for validator instantiations not being restarted
         # between validation passes
@@ -92,7 +105,7 @@ class RedcapModernCsvValidator(SimpleCSVFileValidator):
             'Branching Logic (Show field only if...)': [AnyVal()],
             'Choices, Calculations, OR Slider Labels': [AnyVal()],
             'Custom Alignment': [AnyVal()],
-            'Field Label': [AnyVal()],
+            'Field Label': [RequiredStrVal()],
             'Field Note': [AnyVal()],
             'Field Type': [
                 EnumVal([
@@ -107,7 +120,7 @@ class RedcapModernCsvValidator(SimpleCSVFileValidator):
                     'yesno',
                 ])
             ],
-            'Form Name': [AnyVal()],
+            'Form Name': [RequiredStrVal()],
             'Identifier?': [AnyVal()],
             'Question Number (surveys only)': [AnyVal()],
             'Required Field?': [AnyVal()],
@@ -115,7 +128,7 @@ class RedcapModernCsvValidator(SimpleCSVFileValidator):
             'Text Validation Max': [AnyVal()],
             'Text Validation Min': [AnyVal()],
             'Text Validation Type OR Show Slider Number': [AnyVal()],
-            'Variable / Field Name': [AnyVal()],
+            'Variable / Field Name': [UniqueVal()],
         }
 
         failure_tracker = False
@@ -177,7 +190,9 @@ class RedcapModernCsvValidator(SimpleCSVFileValidator):
 
         # Validation algorithm
         cols_trckr = []
-        for line, row in enumerate(reader):
+        # Start enumeration at two, b/c Excel and other spreadsheet programs
+        # start heaver on line one and first row of data on line 2.
+        for line, row in enumerate(reader, start=2):
             for field_name, field in six.iteritems(row):
                 try:
                     # KeyError: Row has too many defined fields
@@ -188,7 +203,6 @@ class RedcapModernCsvValidator(SimpleCSVFileValidator):
                             self.failures[field_name][line].append(exc)
                             validator.failure_count += 1
                 except KeyError as exc:
-                    print "FAIL"
                     cols_trckr.append(str(line))
         if len(cols_trckr) > 0:
             self.logger.log(
@@ -209,6 +223,45 @@ class RedcapModernCsvValidator(SimpleCSVFileValidator):
         else:
             self.logger.log("Successful validation!\n")
             return True
+
+
+class RedcapLegacyCsvValidationLogger(SimpleLogger):
+    """ REDCap CSV validation logger. """
+
+    pass
+
+
+class RedcapLegacyCsvValidator(SimpleCSVFileValidator):
+    """ Validate legacy REDCap instrument files """
+
+    validators = {
+        'fieldID': [UniqueVal(),],
+        'text': [AnyVal(),],
+        'data_type': [AnyVal(),],
+        'page': [AnyVal(),],
+        'repeating_group_name': [AnyVal(),],
+        'help': [AnyVal(),],
+        'error': [AnyVal(),],
+        'enumeration_type': [AnyVal(),],
+    }
+
+    logger = RedcapLegacyCsvValidationLogger()
+
+    def validate(self):
+        # Temporary hack for validator instantiations not being restarted
+        # between validation passes
+        self.validators = {
+            'fieldID': [UniqueVal(),],
+            'text': [AnyVal(),],
+            'data_type': [AnyVal(),],
+            'page': [AnyVal(),],
+            'repeating_group_name': [AnyVal(),],
+            'help': [AnyVal(),],
+            'error': [AnyVal(),],
+            'enumeration_type': [AnyVal(),],
+        }
+
+        return super(RedcapLegacyCsvValidator, self).validate(self)
 
 
 def log_failures(failures, logger):

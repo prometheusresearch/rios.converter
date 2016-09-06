@@ -400,9 +400,6 @@ class ConvertToRiosProcessorApi(Command):
                     "Unable to parse REDCap data dictionary. Got error:",
                     (str(exc) if isinstance(exc, Error) else repr(exc))
                 )
-                print "TRACEBACK:"
-                one, two, tb = sys.exc_info()
-                traceback.print_tb(tb)
                 return render_to_response(
                     self.validation_fail_template,
                     req,

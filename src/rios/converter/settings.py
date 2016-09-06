@@ -12,6 +12,7 @@ __all__ = (
 )
 
 
+# TODO: Determine if needed
 class TempDirSetting(Setting):
     """ Directory with temporary data """
 
