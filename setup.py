@@ -20,6 +20,7 @@ setup(
     namespace_packages=['rios'],
     install_requires=[
         'rex.web==3.7.1',
+        'rios.core>=0.6.0,<1',
         'rios.conversion==0.6.0',
         'props.csvtoolkit==0.1.1',
         'python-magic==0.4.12',
