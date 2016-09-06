@@ -8,7 +8,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='rios.converter',
-    version='0.5.0',
+    version='0.5.1',
     description="RIOS converter website",
     long_description=open('README.rst', 'r').read(),
     maintainer="Prometheus Research, LLC",
@@ -21,7 +21,7 @@ setup(
     install_requires=[
         'rex.web==3.7.1',
         'rios.core>=0.6.0,<1',
-        'rios.conversion==0.6.0',
+        'rios.conversion==0.6.1',
         'props.csvtoolkit==0.1.1',
         'python-magic==0.4.12',
         'simplejson==3.8.2',
